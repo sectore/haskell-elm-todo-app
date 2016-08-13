@@ -1,2 +1,5 @@
-# scotty-meets-elm
-something with Scotty and Elm
+# still in progess ...
+
+## scotty-meets-elm
+
+something with [Scotty](https://github.com/scotty-web/scotty) ([Haskell](https://www.haskell.org/)) and [Elm](http://elm-lang.org/)
