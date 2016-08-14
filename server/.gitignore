@@ -1,0 +1,9 @@
+dist*
+*.hi
+*.o
+.hsenv*
+.stack-work/
+.cabal-sandbox
+cabal.sandbox.config
+*.swp
+*.keter
