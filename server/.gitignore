@@ -4,6 +4,9 @@ dist*
 .hsenv*
 .stack-work/
 .cabal-sandbox
+sqlite.db
+sqlite.db-shm
+sqlite.db-wal
 cabal.sandbox.config
 *.swp
 *.keter
