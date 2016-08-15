@@ -1,5 +1,5 @@
 # _still in progress ..._
 
-# scotty-meets-elm
+# haskell-elm-todo-app
 
-something with [Scotty](https://github.com/scotty-web/scotty) ([Haskell](https://www.haskell.org/)) and [Elm](http://elm-lang.org/)
+Todo app build with [Servant](http://haskell-servant.github.io/) ([Haskell](https://www.haskell.org/)) on server-sdie and [Elm](http://elm-lang.org/) on client-side
