@@ -5,6 +5,7 @@
 {-# LANGUAGE TypeFamilies      #-}
 {-# LANGUAGE TypeOperators     #-}
 
+
 module App where
 
 import           Control.Monad.IO.Class
@@ -21,17 +22,19 @@ import           Network.Wai.Handler.Warp as Warp
 
 import           Servant
 
-import           Data.Text
+import           Data.Text hiding (map)
 
 import           Api
 import           Models
 
 server :: ConnectionPool -> Server Api
-server pool =
-  userAddH :<|> userGetH
+server pool =      userAddH
+              :<|> userGetH
+              :<|> usersGetH
   where
     userAddH newUser = liftIO $ userAdd newUser
     userGetH name    = liftIO $ userGet name
+    usersGetH        = liftIO $ usersGet
 
     userAdd :: User -> IO (Maybe (Key User))
     userAdd newUser = flip runSqlPersistMPool pool $ do
@@ -44,6 +47,14 @@ server pool =
     userGet name = flip runSqlPersistMPool pool $ do
       mUser <- selectFirst [UserName ==. name] []
       return $ entityVal <$> mUser
+
+    usersGet :: IO [User]
+    usersGet = flip runSqlPersistMPool pool $ do
+      users <- selectList [] []
+      let users' = map (\(Entity _ x) -> x) users
+      return users'
+
+
 
 app :: ConnectionPool -> Application
 app pool = serve api $ server pool
