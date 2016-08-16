@@ -8,10 +8,28 @@ Todo app build with [Servant](http://haskell-servant.github.io/) ([Haskell](http
 
 ### Build and run server-side app
 
+- Goto project folder
+
+``` shell
+cd {project}/server/
+```
+
+- Build project:
 
 ``` shell
 stack build
+```
+
+- Execute app
+
+``` shell
 stack exec haskell-elm-todo-app
+```
+
+- OR use live reloading w/ [halive](https://github.com/lukexi/halive)
+
+``` shell
+halive src/Main.hs
 ```
 
 ### DB queries
