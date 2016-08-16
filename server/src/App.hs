@@ -71,9 +71,7 @@ server pool =      addUser
 
     addTodo' :: Todo -> IO (Key Todo)
     addTodo' todo = flip Sqlite.runSqlPersistMPool pool $ do
-      todoId <- Sqlite.insert todo
-      return $ todoId
-
+      Sqlite.insert todo
 
 app :: ConnectionPool -> Application
 app pool = serve api $ server pool
