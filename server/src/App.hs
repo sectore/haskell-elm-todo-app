@@ -32,11 +32,19 @@ server pool =      addUser
               :<|> getUser
               :<|> deleteUser
               :<|> getUsers
+              :<|> addTodo
+              -- :<|> getTodo
+              -- :<|> deleteTodo
+              -- :<|> getTodos
   where
     addUser user    = liftIO $ addUser' user
     getUser name    = liftIO $ getUser' name
     getUsers        = liftIO $ getUsers'
     deleteUser name = liftIO $ deleteUser' name
+    addTodo todo    = liftIO $ addTodo' todo
+   -- getTodo id    = liftIO $ getTodo' id
+   -- getTodos        = liftIO $ getTodo'
+   -- deleteTodo id = liftIO $ deleteTodo' id
 
     addUser' :: User -> IO (Maybe (Key User))
     addUser' user = flip Sqlite.runSqlPersistMPool pool $ do
@@ -56,11 +64,15 @@ server pool =      addUser
       let users' = map (\(Sqlite.Entity _ x) -> x) users
       return users'
 
-    deleteUser' :: Text -> IO ()
+    deleteUser' :: Text -> IO NoContent
     deleteUser' name = flip runSqlPersistMPool pool $ do
       Sqlite.deleteWhere [UserName ==. name]
-      return ()
+      return NoContent
 
+    addTodo' :: Todo -> IO (Maybe (Key Todo))
+    addTodo' todo = flip Sqlite.runSqlPersistMPool pool $ do
+      todoId <- Sqlite.insert todo
+      return $ Just todoId
 
 
 app :: ConnectionPool -> Application
