@@ -15,7 +15,7 @@ import           Data.String.Conversions
 
 import           Database.Persist
 import           Database.Persist.Sql
-import           Database.Persist.Sqlite
+import qualified Database.Persist.Sqlite as Sqlite
 
 import           Network.Wai
 import           Network.Wai.Handler.Warp as Warp
@@ -28,31 +28,38 @@ import           Api
 import           Models
 
 server :: ConnectionPool -> Server Api
-server pool =      userAddH
-              :<|> userGetH
-              :<|> usersGetH
+server pool =      addUser
+              :<|> getUser
+              :<|> deleteUser
+              :<|> getUsers
   where
-    userAddH newUser = liftIO $ userAdd newUser
-    userGetH name    = liftIO $ userGet name
-    usersGetH        = liftIO $ usersGet
+    addUser user    = liftIO $ addUser' user
+    getUser name    = liftIO $ getUser' name
+    getUsers        = liftIO $ getUsers'
+    deleteUser name = liftIO $ deleteUser' name
 
-    userAdd :: User -> IO (Maybe (Key User))
-    userAdd newUser = flip runSqlPersistMPool pool $ do
-      exists <- selectFirst [UserName ==. (userName newUser)] []
+    addUser' :: User -> IO (Maybe (Key User))
+    addUser' user = flip Sqlite.runSqlPersistMPool pool $ do
+      exists <- Sqlite.selectFirst [UserName ==. (userName user)] []
       case exists of
-        Nothing -> Just <$> insert newUser
+        Nothing -> Just <$> Sqlite.insert user
         Just _ -> return Nothing
 
-    userGet :: Text -> IO (Maybe User)
-    userGet name = flip runSqlPersistMPool pool $ do
-      mUser <- selectFirst [UserName ==. name] []
+    getUser' :: Text -> IO (Maybe User)
+    getUser' name = flip runSqlPersistMPool pool $ do
+      mUser <- Sqlite.selectFirst [UserName ==. name] []
       return $ entityVal <$> mUser
 
-    usersGet :: IO [User]
-    usersGet = flip runSqlPersistMPool pool $ do
-      users <- selectList [] []
-      let users' = map (\(Entity _ x) -> x) users
+    getUsers' :: IO [User]
+    getUsers' = flip runSqlPersistMPool pool $ do
+      users <- Sqlite.selectList [] []
+      let users' = map (\(Sqlite.Entity _ x) -> x) users
       return users'
+
+    deleteUser' :: Text -> IO ()
+    deleteUser' name = flip runSqlPersistMPool pool $ do
+      Sqlite.deleteWhere [UserName ==. name]
+      return ()
 
 
 
@@ -62,9 +69,9 @@ app pool = serve api $ server pool
 mkApp :: FilePath -> IO Application
 mkApp sqliteFile = do
   pool <- runStderrLoggingT $ do
-    createSqlitePool (cs sqliteFile) 5
+    Sqlite.createSqlitePool (cs sqliteFile) 5
 
-  runSqlPool (runMigration migrateAll) pool
+  runSqlPool (Sqlite.runMigration migrateAll) pool
   return $ app pool
 
 run :: FilePath -> IO ()

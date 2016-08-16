@@ -38,13 +38,17 @@ by using [httpie](https://github.com/jkbrzt/httpie):
 
 ``` shell
 # insert an user
-http POST localhost:3000/user/add name=Alice age:=42 -j
+http POST localhost:3000/user/add name=Alice age:=42
 
 # get an user
 http localhost:3000/user/get/Alice
 
 # get all users
 http localhost:3000/users/
+
+# delete an user
+http DELETE localhost:3000/user/Alice
+
 
 ```
 
