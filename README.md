@@ -27,3 +27,21 @@ curl -H 'Content-type: application/json' localhost:3000/user/get/Alice
 curl -H 'Content-type: application/json' localhost:3000/users/
 
 ```
+
+## Acknowledge
+
+### Haskell / Servant stuff
+
+- Haskell + Persistent: [http://www.yesodweb.com/book/persistent](http://www.yesodweb.com/book/persistent)
+
+- "(Querying an existing database)[https://www.schoolofhaskell.com/school/advanced-haskell/persistent-in-detail/existing-database]"
+
+- Example Servant + Persistent: [https://github.com/haskell-servant/example-servant-persistent/](https://github.com/haskell-servant/example-servant-persistent/)
+
+- Example Servant + Persistent by Matt Parsons: [https://github.com/parsonsmatt/servant-persistent](https://github.com/parsonsmatt/servant-persistent)
+
+- Example Servant + Elm: [https://github.com/haskell-servant/example-servant-elm](https://github.com/haskell-servant/example-servant-elm)
+
+- "Todobackend" with Servant: [https://github.com/jhedev/todobackend-haskell/tree/master/todobackend-servant](https://github.com/jhedev/todobackend-haskell/tree/master/todobackend-servant)
+
+- Album Haskell Elm app: [https://github.com/rundis/albums](https://github.com/rundis/albums)
