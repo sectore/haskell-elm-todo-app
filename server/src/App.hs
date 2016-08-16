@@ -69,10 +69,10 @@ server pool =      addUser
       Sqlite.deleteWhere [UserName ==. name]
       return NoContent
 
-    addTodo' :: Todo -> IO (Maybe (Key Todo))
+    addTodo' :: Todo -> IO (Key Todo)
     addTodo' todo = flip Sqlite.runSqlPersistMPool pool $ do
       todoId <- Sqlite.insert todo
-      return $ Just todoId
+      return $ todoId
 
 
 app :: ConnectionPool -> Application
