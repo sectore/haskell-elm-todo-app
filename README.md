@@ -58,7 +58,7 @@ http DELETE localhost:3000/user/Alice
 
 - Haskell + Persistent: [http://www.yesodweb.com/book/persistent](http://www.yesodweb.com/book/persistent)
 
-- "(Querying an existing database)[https://www.schoolofhaskell.com/school/advanced-haskell/persistent-in-detail/existing-database]"
+- School of Haskell "[Querying an existing database](https://www.schoolofhaskell.com/school/advanced-haskell/persistent-in-detail/existing-database)"
 
 - Example Servant + Persistent: [https://github.com/haskell-servant/example-servant-persistent/](https://github.com/haskell-servant/example-servant-persistent/)
 
