@@ -16,15 +16,17 @@ stack exec haskell-elm-todo-app
 
 ### DB queries
 
+by using [httpie](https://github.com/jkbrzt/httpie):
+
 ``` shell
 # insert an user
-curl -H 'Content-type: application/json' localhost:3000/user/add --data '{"name": "Alice", "age": 42}'
+http POST localhost:3000/user/add name=Alice age:=42 -j
 
 # get an user
-curl -H 'Content-type: application/json' localhost:3000/user/get/Alice
+http localhost:3000/user/get/Alice
 
 # get all users
-curl -H 'Content-type: application/json' localhost:3000/users/
+http localhost:3000/users/
 
 ```
 
