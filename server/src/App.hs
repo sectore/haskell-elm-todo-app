@@ -31,43 +31,44 @@ import           Api
 import           Models
 
 server :: ConnectionPool -> Server Api
-server pool =      addTodo
-              :<|> getTodo
+server pool =      createTodo
+              :<|> readTodo
               :<|> updateTodo
               :<|> deleteTodo
-              :<|> getTodos
+              :<|> readTodos
   where
-    addTodo todo       = liftIO $ addTodo' todo
-    getTodo id         = liftIO $ getTodo' id
+    createTodo todo    = liftIO $ createTodo' todo
+    readTodo id        = liftIO $ readTodo' id
     updateTodo id todo = liftIO $ updateTodo' id todo
-    getTodos           = liftIO $ getTodos'
     deleteTodo id      = liftIO $ deleteTodo' id
+    readTodos          = liftIO $ readTodos'
 
-    addTodo' :: Todo -> IO (Key Todo)
-    addTodo' todo = flip Sqlite.runSqlPersistMPool pool $ do
+    createTodo' :: Todo -> IO (Key Todo)
+    createTodo' todo = flip Sqlite.runSqlPersistMPool pool $ do
       Sqlite.insert todo
 
-    getTodo' :: Key Todo -> IO Todo
-    getTodo' key = flip runSqlPersistMPool pool $ do
+    readTodo' :: Key Todo -> IO Todo
+    readTodo' key = flip runSqlPersistMPool pool $ do
       todo <- Sqlite.get key
       case todo of
         Just todo -> return todo
         Nothing -> throwM err404
 
+    updateTodo' :: (Key Todo) -> Todo -> IO NoContent
     updateTodo' key todo = flip Sqlite.runSqlPersistMPool pool $ do
       Sqlite.replace key todo
       return NoContent
-
-    getTodos' :: IO [Todo]
-    getTodos' = flip runSqlPersistMPool pool $ do
-      todos <- Sqlite.selectList [] []
-      let todos' = map (\(Sqlite.Entity _ todo) -> todo) todos
-      return todos'
 
     deleteTodo' :: (Key Todo) -> IO NoContent
     deleteTodo' id = flip runSqlPersistMPool pool $ do
       Sqlite.delete id
       return NoContent
+
+    readTodos' :: IO [Todo]
+    readTodos' = flip runSqlPersistMPool pool $ do
+      todos <- Sqlite.selectList [] []
+      let todos' = map (\(Sqlite.Entity _ todo) -> todo) todos
+      return todos'
 
 app :: ConnectionPool -> Application
 app pool = serve api $ server pool
