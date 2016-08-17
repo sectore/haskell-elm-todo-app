@@ -55,11 +55,15 @@ http POST localhost:3000/todo/ completed:=false description="my todo 1
 # get a todo
 http localhost:3000/todo/1
 
+# delete a todo
+http DELETE localhost:3000/todo/1
+
+# update a todo
+http PUT localhost:3000/todo/1 description="any other description" completed:=true
+
 # get all todos
 http localhost:3000/todos
 
-# delete a todo
-http DELETE localhost:3000/todo/1
 ```
 
 ## Acknowledge

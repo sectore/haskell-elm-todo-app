@@ -22,9 +22,21 @@ type Api =
   :<|> "user"  :> Capture "name" Text :> Get '[JSON] (Maybe User)
   :<|> "user"  :> Capture "name" Text :> Delete '[JSON] NoContent
   :<|> "users" :> Get '[JSON] [User]
-  :<|> "todo"  :> ReqBody '[JSON] Todo :> Post '[JSON] (Key Todo)
-  :<|> "todo"  :> Capture "id" (Key Todo) :> Get '[JSON] Todo
-  :<|> "todo"  :> Capture "id" (Key Todo) :> Delete '[JSON] NoContent
+  
+  -- create
+  :<|> "todo"  :> ReqBody '[JSON] Todo
+               :> Post '[JSON] (Key Todo)
+  -- read
+  :<|> "todo"  :> Capture "key" (Key Todo)
+               :> Get '[JSON] Todo
+  -- update
+  :<|> "todo"  :> Capture "key" (Key Todo)
+               :> ReqBody '[JSON] Todo
+               :> Put '[JSON] NoContent
+  -- delete
+  :<|> "todo"  :> Capture "id" (Key Todo)
+               :> Delete '[JSON] NoContent
+  -- all
   :<|> "todos" :> Get '[JSON] [Todo]
 
 

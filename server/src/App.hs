@@ -37,6 +37,7 @@ server pool =      addUser
               :<|> getUsers
               :<|> addTodo
               :<|> getTodo
+              :<|> updateTodo
               :<|> deleteTodo
               :<|> getTodos
   where
@@ -46,6 +47,7 @@ server pool =      addUser
     deleteUser name = liftIO $ deleteUser' name
     addTodo todo    = liftIO $ addTodo' todo
     getTodo id      = liftIO $ getTodo' id
+    updateTodo id todo = liftIO $ updateTodo' id todo
     getTodos        = liftIO $ getTodos'
     deleteTodo id   = liftIO $ deleteTodo' id
 
@@ -77,11 +79,15 @@ server pool =      addUser
       Sqlite.insert todo
 
     getTodo' :: Key Todo -> IO Todo
-    getTodo' id = flip runSqlPersistMPool pool $ do
-      todo <- Sqlite.get id
+    getTodo' key = flip runSqlPersistMPool pool $ do
+      todo <- Sqlite.get key
       case todo of
         Just todo -> return todo
         Nothing -> throwM err404
+
+    updateTodo' key todo = flip Sqlite.runSqlPersistMPool pool $ do
+      Sqlite.replace key todo
+      return NoContent
 
     getTodos' :: IO [Todo]
     getTodos' = flip runSqlPersistMPool pool $ do
