@@ -37,7 +37,7 @@ server pool =      addUser
               :<|> getUsers
               :<|> addTodo
               :<|> getTodo
-              -- :<|> deleteTodo
+              :<|> deleteTodo
               :<|> getTodos
   where
     addUser user    = liftIO $ addUser' user
@@ -47,7 +47,7 @@ server pool =      addUser
     addTodo todo    = liftIO $ addTodo' todo
     getTodo id      = liftIO $ getTodo' id
     getTodos        = liftIO $ getTodos'
-    -- deleteTodo id = liftIO $ deleteTodo' id
+    deleteTodo id   = liftIO $ deleteTodo' id
 
     addUser' :: User -> IO (Maybe (Key User))
     addUser' user = flip Sqlite.runSqlPersistMPool pool $ do
@@ -88,6 +88,11 @@ server pool =      addUser
       todos <- Sqlite.selectList [] []
       let todos' = map (\(Sqlite.Entity _ todo) -> todo) todos
       return todos'
+
+    deleteTodo' :: (Key Todo) -> IO NoContent
+    deleteTodo' id = flip runSqlPersistMPool pool $ do
+      Sqlite.delete id
+      return NoContent
       
 app :: ConnectionPool -> Application
 app pool = serve api $ server pool

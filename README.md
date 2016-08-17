@@ -57,6 +57,9 @@ http localhost:3000/todo/1
 
 # get all todos
 http localhost:3000/todos
+
+# delete a todo
+http DELETE localhost:3000/todo/1
 ```
 
 ## Acknowledge
