@@ -65,10 +65,12 @@ http localhost:3000/todos
 
 - Example Servant + Persistent: [https://github.com/haskell-servant/example-servant-persistent/](https://github.com/haskell-servant/example-servant-persistent/)
 
-- Example Servant + Persistent by Matt Parsons: [https://github.com/parsonsmatt/servant-persistent](https://github.com/parsonsmatt/servant-persistent)
+- Example Servant + Persistent by [Matt Parsons](https://github.com/parsonsmatt/): [https://github.com/parsonsmatt/servant-persistent](https://github.com/parsonsmatt/servant-persistent)
 
 - Example Servant + Elm: [https://github.com/haskell-servant/example-servant-elm](https://github.com/haskell-servant/example-servant-elm)
 
 - "Todobackend" with Servant: [https://github.com/jhedev/todobackend-haskell/tree/master/todobackend-servant](https://github.com/jhedev/todobackend-haskell/tree/master/todobackend-servant)
 
-- Album Haskell Elm app: [https://github.com/rundis/albums](https://github.com/rundis/albums)
+- Album Haskell Elm app by [Magnus Rundberget](https://github.com/rundis): [https://github.com/rundis/albums](https://github.com/rundis/albums)
+
+- DB example of "[5 Ways to Test Application Code that Accesses a Database in Haskell](https://github.com/cdepillabout/testing-code-that-accesses-db-in-haskell/)"
