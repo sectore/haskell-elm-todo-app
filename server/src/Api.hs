@@ -25,7 +25,7 @@ type Api =
   :<|> "todo"  :> ReqBody '[JSON] Todo :> Post '[JSON] (Key Todo)
   :<|> "todo"  :> Capture "id" (Key Todo) :> Get '[JSON] Todo
   -- :<|> "todo"  :> Capture "todoid" Integer :> Delete '[JSON] NoContent
-  -- :<|> "todos" :> Get '[JSON] [Todo]
+  :<|> "todos" :> Get '[JSON] [Todo]
 
 
 api :: Proxy Api

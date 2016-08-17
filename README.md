@@ -55,6 +55,8 @@ http POST localhost:3000/todo/ completed:=false description="my todo 1
 # get a todo
 http localhost:3000/todo/1
 
+# get all todos
+http localhost:3000/todos
 ```
 
 ## Acknowledge

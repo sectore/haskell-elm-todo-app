@@ -38,15 +38,15 @@ server pool =      addUser
               :<|> addTodo
               :<|> getTodo
               -- :<|> deleteTodo
-              -- :<|> getTodos
+              :<|> getTodos
   where
     addUser user    = liftIO $ addUser' user
     getUser name    = liftIO $ getUser' name
     getUsers        = liftIO $ getUsers'
     deleteUser name = liftIO $ deleteUser' name
     addTodo todo    = liftIO $ addTodo' todo
-    getTodo id    = liftIO $ getTodo' id
-    -- getTodos        = liftIO $ getTodo'
+    getTodo id      = liftIO $ getTodo' id
+    getTodos        = liftIO $ getTodos'
     -- deleteTodo id = liftIO $ deleteTodo' id
 
     addUser' :: User -> IO (Maybe (Key User))
@@ -64,7 +64,7 @@ server pool =      addUser
     getUsers' :: IO [User]
     getUsers' = flip runSqlPersistMPool pool $ do
       users <- Sqlite.selectList [] []
-      let users' = map (\(Sqlite.Entity _ x) -> x) users
+      let users' = map (\(Sqlite.Entity _ user) -> user) users
       return users'
 
     deleteUser' :: Text -> IO NoContent
@@ -83,6 +83,12 @@ server pool =      addUser
         Just todo -> return todo
         Nothing -> throwM err404
 
+    getTodos' :: IO [Todo]
+    getTodos' = flip runSqlPersistMPool pool $ do
+      todos <- Sqlite.selectList [] []
+      let todos' = map (\(Sqlite.Entity _ todo) -> todo) todos
+      return todos'
+      
 app :: ConnectionPool -> Application
 app pool = serve api $ server pool
 
