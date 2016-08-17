@@ -50,7 +50,10 @@ http localhost:3000/users/
 http DELETE localhost:3000/user/Alice
 
 # add a todo
-http POST localhost:3000/todo/ completed:=false description="my todo 1"
+http POST localhost:3000/todo/ completed:=false description="my todo 1
+
+# get a todo
+http localhost:3000/todo/1
 
 ```
 

@@ -37,11 +37,11 @@ instance FromJSON User where
 instance ToJSON User where
   toJSON (User name age) =
     object [ "name" .= name
-           , "age"  .= age  ]
+           , "age"  .= age]
 
 instance FromJSON Todo where
   parseJSON = withObject "Todo" $ \ v ->
     Todo <$> v .: "description"
          <*> v .: "completed"
-
+         
 instance ToJSON Todo

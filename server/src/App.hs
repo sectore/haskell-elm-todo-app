@@ -9,7 +9,10 @@
 module App where
 
 import           Control.Monad.IO.Class
+
 import           Control.Monad.Logger (runStderrLoggingT)
+
+import           Control.Monad.Catch (throwM)
 
 import           Data.String.Conversions
 
@@ -33,7 +36,7 @@ server pool =      addUser
               :<|> deleteUser
               :<|> getUsers
               :<|> addTodo
-              -- :<|> getTodo
+              :<|> getTodo
               -- :<|> deleteTodo
               -- :<|> getTodos
   where
@@ -42,9 +45,9 @@ server pool =      addUser
     getUsers        = liftIO $ getUsers'
     deleteUser name = liftIO $ deleteUser' name
     addTodo todo    = liftIO $ addTodo' todo
-   -- getTodo id    = liftIO $ getTodo' id
-   -- getTodos        = liftIO $ getTodo'
-   -- deleteTodo id = liftIO $ deleteTodo' id
+    getTodo id    = liftIO $ getTodo' id
+    -- getTodos        = liftIO $ getTodo'
+    -- deleteTodo id = liftIO $ deleteTodo' id
 
     addUser' :: User -> IO (Maybe (Key User))
     addUser' user = flip Sqlite.runSqlPersistMPool pool $ do
@@ -72,6 +75,13 @@ server pool =      addUser
     addTodo' :: Todo -> IO (Key Todo)
     addTodo' todo = flip Sqlite.runSqlPersistMPool pool $ do
       Sqlite.insert todo
+
+    getTodo' :: Key Todo -> IO Todo
+    getTodo' id = flip runSqlPersistMPool pool $ do
+      todo <- Sqlite.get id
+      case todo of
+        Just todo -> return todo
+        Nothing -> throwM err404
 
 app :: ConnectionPool -> Application
 app pool = serve api $ server pool
