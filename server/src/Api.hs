@@ -16,15 +16,9 @@ import Models
 import Servant.API
 
 
-
 type Api =
-       "user"  :> ReqBody '[JSON] User :> Post '[JSON] (Maybe (Key User))
-  :<|> "user"  :> Capture "name" Text :> Get '[JSON] (Maybe User)
-  :<|> "user"  :> Capture "name" Text :> Delete '[JSON] NoContent
-  :<|> "users" :> Get '[JSON] [User]
-  
   -- create
-  :<|> "todo"  :> ReqBody '[JSON] Todo
+       "todo"  :> ReqBody '[JSON] Todo
                :> Post '[JSON] (Key Todo)
   -- read
   :<|> "todo"  :> Capture "key" (Key Todo)

@@ -31,48 +31,17 @@ import           Api
 import           Models
 
 server :: ConnectionPool -> Server Api
-server pool =      addUser
-              :<|> getUser
-              :<|> deleteUser
-              :<|> getUsers
-              :<|> addTodo
+server pool =      addTodo
               :<|> getTodo
               :<|> updateTodo
               :<|> deleteTodo
               :<|> getTodos
   where
-    addUser user    = liftIO $ addUser' user
-    getUser name    = liftIO $ getUser' name
-    getUsers        = liftIO $ getUsers'
-    deleteUser name = liftIO $ deleteUser' name
-    addTodo todo    = liftIO $ addTodo' todo
-    getTodo id      = liftIO $ getTodo' id
+    addTodo todo       = liftIO $ addTodo' todo
+    getTodo id         = liftIO $ getTodo' id
     updateTodo id todo = liftIO $ updateTodo' id todo
-    getTodos        = liftIO $ getTodos'
-    deleteTodo id   = liftIO $ deleteTodo' id
-
-    addUser' :: User -> IO (Maybe (Key User))
-    addUser' user = flip Sqlite.runSqlPersistMPool pool $ do
-      exists <- Sqlite.selectFirst [UserName ==. (userName user)] []
-      case exists of
-        Nothing -> Just <$> Sqlite.insert user
-        Just _ -> return Nothing
-
-    getUser' :: Text -> IO (Maybe User)
-    getUser' name = flip runSqlPersistMPool pool $ do
-      mUser <- Sqlite.selectFirst [UserName ==. name] []
-      return $ entityVal <$> mUser
-
-    getUsers' :: IO [User]
-    getUsers' = flip runSqlPersistMPool pool $ do
-      users <- Sqlite.selectList [] []
-      let users' = map (\(Sqlite.Entity _ user) -> user) users
-      return users'
-
-    deleteUser' :: Text -> IO NoContent
-    deleteUser' name = flip runSqlPersistMPool pool $ do
-      Sqlite.deleteWhere [UserName ==. name]
-      return NoContent
+    getTodos           = liftIO $ getTodos'
+    deleteTodo id      = liftIO $ deleteTodo' id
 
     addTodo' :: Todo -> IO (Key Todo)
     addTodo' todo = flip Sqlite.runSqlPersistMPool pool $ do
@@ -99,7 +68,7 @@ server pool =      addUser
     deleteTodo' id = flip runSqlPersistMPool pool $ do
       Sqlite.delete id
       return NoContent
-      
+
 app :: ConnectionPool -> Application
 app pool = serve api $ server pool
 
