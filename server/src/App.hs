@@ -47,12 +47,9 @@ server pool =      createTodo
     createTodo' todo = flip Sqlite.runSqlPersistMPool pool $ do
       Sqlite.insert todo
 
-    readTodo' :: Key Todo -> IO Todo
-    readTodo' key = flip runSqlPersistMPool pool $ do
-      todo <- Sqlite.get key
-      case todo of
-        Just todo -> return todo
-        Nothing -> throwM err404
+    readTodo' :: Key Todo -> IO (Maybe Todo)
+    readTodo' key = flip Sqlite.runSqlPersistMPool pool $ do
+      Sqlite.get key
 
     updateTodo' :: (Key Todo) -> Todo -> IO NoContent
     updateTodo' key todo = flip Sqlite.runSqlPersistMPool pool $ do

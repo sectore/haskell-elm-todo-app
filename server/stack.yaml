@@ -37,10 +37,11 @@ resolver: lts-6.12
 # will not be run. This is useful for tweaking upstream packages.
 packages:
 - '.'
-# Dependency packages to be pulled from upstream that are not in the resolver
+# Dependency packages to be pulled from upstream fthat are not in the resolver
 # (e.g., acme-missiles-0.3)
 extra-deps:
-- halive-0.1.0.8
+- halive-0.1.0.7
+
 
 # Override default flag values for local packages and extra-deps
 flags: {}

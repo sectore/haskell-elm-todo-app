@@ -22,7 +22,7 @@ type Api =
                :> Post '[JSON] (Key Todo)
   -- read
   :<|> "todo"  :> Capture "key" (Key Todo)
-               :> Get '[JSON] Todo
+               :> Get '[JSON] (Maybe Todo)
   -- update
   :<|> "todo"  :> Capture "key" (Key Todo)
                :> ReqBody '[JSON] Todo

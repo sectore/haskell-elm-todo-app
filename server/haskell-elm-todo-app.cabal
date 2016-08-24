@@ -39,9 +39,32 @@ executable haskell-elm-todo-app
 test-suite haskell-elm-todo-app-test
   type:                exitcode-stdio-1.0
   hs-source-dirs:      test
+                     , src
   main-is:             Spec.hs
+  other-modules:       AppSpec
   build-depends:       base
-                     , haskell-elm-todo-app
+                     , exceptions
+                     , bytestring
+                     , aeson
+                     , monad-logger
+                     , hspec
+                     , hspec-wai
+                     , hspec-wai-json
+                     , QuickCheck
+                     , warp
+                     , wai
+                     , wai-extra
+                     , persistent
+                     , persistent-template
+                     , persistent-sqlite
+                     , servant
+                     , servant-server
+                     , servant-client
+                     , string-conversions
+                     , text
+                     , http-client
+                     , mockery
+                     , transformers
   ghc-options:         -threaded -rtsopts -with-rtsopts=-N
   default-language:    Haskell2010
 
