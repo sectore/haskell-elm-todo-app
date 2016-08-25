@@ -19,16 +19,16 @@ import Servant.API
 type Api =
   -- create
        "todo"  :> ReqBody '[JSON] Todo
-               :> Post '[JSON] (Key Todo)
+               :> Post '[JSON] TodoId
   -- read
-  :<|> "todo"  :> Capture "key" (Key Todo)
+  :<|> "todo"  :> Capture "key" TodoId
                :> Get '[JSON] (Maybe Todo)
   -- update
-  :<|> "todo"  :> Capture "key" (Key Todo)
+  :<|> "todo"  :> Capture "key" TodoId
                :> ReqBody '[JSON] Todo
                :> Put '[JSON] NoContent
   -- delete
-  :<|> "todo"  :> Capture "id" (Key Todo)
+  :<|> "todo"  :> Capture "id" TodoId
                :> Delete '[JSON] NoContent
   -- all
   :<|> "todos" :> Get '[JSON] [Todo]

@@ -18,15 +18,12 @@ import GHC.Generics
 import Database.Persist.TH
 
 share [mkPersist sqlSettings, mkMigrate "migrateAll"] [persistLowerCase|
-  Todo
+Todo
     description String
     completed Bool
     deriving Generic Show Read Eq
 |]
 
-instance FromJSON Todo where
-  parseJSON = withObject "Todo" $ \ v ->
-    Todo <$> v .: "description"
-         <*> v .: "completed"
- 
+instance FromJSON Todo
+
 instance ToJSON Todo

@@ -43,20 +43,20 @@ server pool =      createTodo
     deleteTodo id      = liftIO $ deleteTodo' id
     readTodos          = liftIO $ readTodos'
 
-    createTodo' :: Todo -> IO (Key Todo)
+    createTodo' :: Todo -> IO TodoId
     createTodo' todo = flip Sqlite.runSqlPersistMPool pool $ do
       Sqlite.insert todo
 
-    readTodo' :: Key Todo -> IO (Maybe Todo)
-    readTodo' key = flip Sqlite.runSqlPersistMPool pool $ do
-      Sqlite.get key
+    readTodo' :: TodoId -> IO (Maybe Todo)
+    readTodo' id = flip Sqlite.runSqlPersistMPool pool $ do
+      Sqlite.get id
 
-    updateTodo' :: (Key Todo) -> Todo -> IO NoContent
-    updateTodo' key todo = flip Sqlite.runSqlPersistMPool pool $ do
-      Sqlite.replace key todo
+    updateTodo' :: TodoId -> Todo -> IO NoContent
+    updateTodo' id todo = flip Sqlite.runSqlPersistMPool pool $ do
+      Sqlite.replace id todo
       return NoContent
 
-    deleteTodo' :: (Key Todo) -> IO NoContent
+    deleteTodo' :: TodoId -> IO NoContent
     deleteTodo' id = flip runSqlPersistMPool pool $ do
       Sqlite.delete id
       return NoContent
