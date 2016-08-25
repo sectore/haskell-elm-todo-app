@@ -26,7 +26,7 @@ share [mkPersist sqlSettings, mkMigrate "migrateAll"] [persistLowerCase|
   Todo
     description String
     completed Bool
-    deriving Generic Show
+    deriving Generic Show Eq
 |]
 
 instance FromJSON User where
