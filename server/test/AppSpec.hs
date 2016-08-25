@@ -52,6 +52,16 @@ spec = do
         id <- try port (createTodo todo)
         try port (readTodo id) `shouldReturn` (Just todo)
 
+
+    describe "DELETE /todo" $ do
+      it "updates a todo" $ \ port -> do
+        let todoA = Todo "Do A" True
+        let todoB = Todo "Do B" True
+        idA <- try port (createTodo todoA)
+        idB <- try port (createTodo todoB)
+        try port (deleteTodo idA)
+        try port getTodos `shouldReturn` [todoB]
+        
 withApp :: (Int -> IO a) -> IO a
 withApp action =
   inTempDirectory $ do
