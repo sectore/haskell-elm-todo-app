@@ -7,13 +7,14 @@ import Test.Hspec.Wai (get, with, shouldRespondWith)
 
 import Network.HTTP.Client
 import Network.Wai (Application)
-import           Network.Wai.Handler.Warp
+import Network.Wai.Handler.Warp
 import Control.Exception (throwIO, ErrorCall(..))
 import Control.Monad.Trans.Except
 import Servant.API
 import Servant.Client
 import Test.Mockery.Directory (inTempDirectory)
 import Database.Persist
+import Database.Persist.Sqlite (toSqlKey)
 import App (mkApp)
 import Api
 import Models
@@ -30,11 +31,26 @@ createTodo :<|> readTodo :<|> updateTodo :<|> deleteTodo :<|> getTodos = client 
 spec :: Spec
 spec = do
   around withApp $ do
-    describe "GET /todos" $ do
-      it "responds with an empty list be default" $ \ port -> do
-        -- let user = Todo "Alice" True
-        try port getTodos `shouldReturn` []
 
+    describe "GET /todos" $ do
+      it "responds with an empty list by default" $ \ port -> do
+        try port getTodos `shouldReturn` []
+ 
+    describe "POST /todo" $ do
+      it "responds with a key of new created todo" $ \ port -> do
+        let todo = Todo "Do something" True
+        id <- try port (createTodo todo)
+        -- todo is first entry, so it has to have an id of "1"
+        id `shouldBe` toSqlKey (read "1")        
+
+    describe "GET /todo" $ do
+      it "responds with Nothing if no todo is available" $ \ port -> do
+        let sqlKey = toSqlKey (read "100")
+        try port (readTodo sqlKey) `shouldReturn` Nothing
+      it "responds with a todo" $ \ port -> do
+        let todo = Todo "Do something" True
+        id <- try port (createTodo todo)
+        try port (readTodo id) `shouldReturn` (Just todo)
 
 withApp :: (Int -> IO a) -> IO a
 withApp action =

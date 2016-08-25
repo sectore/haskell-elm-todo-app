@@ -42,6 +42,9 @@ test-suite haskell-elm-todo-app-test
                      , src
   main-is:             Spec.hs
   other-modules:       AppSpec
+                     , Models
+                     , Api
+                     , App
   build-depends:       base
                      , exceptions
                      , bytestring
