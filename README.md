@@ -61,6 +61,31 @@ http localhost:3000/todos
 
 ```
 
+
+### Build and run client-side app
+
+- Goto project folder
+
+``` shell
+cd {project}/client/
+```
+
+- Build project:
+
+``` shell
+npm i
+```
+
+- Run app
+
+``` shell
+npm start
+
+```
+
+Open [http://localhost:3333](http://localhost:3333).
+
+
 ## Acknowledge
 
 ### Haskell / Servant stuff
