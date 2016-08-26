@@ -8,6 +8,7 @@
 {-# LANGUAGE TemplateHaskell            #-}
 {-# LANGUAGE TypeFamilies               #-}
 {-# LANGUAGE DeriveGeneric              #-}
+{-# LANGUAGE FlexibleInstances          #-}
 
 module Models where
 
@@ -16,6 +17,7 @@ import Data.Text
 import GHC.Generics
 
 import Database.Persist.TH
+import Database.Persist
 
 share [mkPersist sqlSettings, mkMigrate "migrateAll"] [persistLowerCase|
 Todo
@@ -25,5 +27,10 @@ Todo
 |]
 
 instance FromJSON Todo
+instance FromJSON (Entity Todo) where
+  parseJSON = entityIdFromJSON
+
 
 instance ToJSON Todo
+instance ToJSON (Entity Todo) where
+  toJSON = entityIdToJSON

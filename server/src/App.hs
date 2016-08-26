@@ -47,10 +47,10 @@ server pool =      createTodo
     createTodo' todo = flip Sqlite.runSqlPersistMPool pool $ do
       Sqlite.insert todo
 
-    readTodo' :: TodoId -> IO (Maybe Todo)
+    readTodo' :: TodoId -> IO (Maybe (Entity Todo))
     readTodo' id = flip Sqlite.runSqlPersistMPool pool $ do
-      Sqlite.get id
-
+      Sqlite.selectFirst [TodoId ==. id] []
+ 
     updateTodo' :: TodoId -> Todo -> IO NoContent
     updateTodo' id todo = flip Sqlite.runSqlPersistMPool pool $ do
       Sqlite.replace id todo
@@ -61,11 +61,9 @@ server pool =      createTodo
       Sqlite.delete id
       return NoContent
 
-    readTodos' :: IO [Todo]
+    readTodos' :: IO [Entity Todo]
     readTodos' = flip runSqlPersistMPool pool $ do
-      todos <- Sqlite.selectList [] []
-      let todos' = map (\(Sqlite.Entity _ todo) -> todo) todos
-      return todos'
+      Sqlite.selectList [] []
 
 app :: ConnectionPool -> Application
 app pool = serve api $ server pool

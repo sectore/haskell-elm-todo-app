@@ -22,7 +22,7 @@ type Api =
                :> Post '[JSON] TodoId
   -- read
   :<|> "todo"  :> Capture "key" TodoId
-               :> Get '[JSON] (Maybe Todo)
+               :> Get '[JSON] (Maybe (Entity Todo))
   -- update
   :<|> "todo"  :> Capture "key" TodoId
                :> ReqBody '[JSON] Todo
@@ -31,7 +31,7 @@ type Api =
   :<|> "todo"  :> Capture "id" TodoId
                :> Delete '[JSON] NoContent
   -- all
-  :<|> "todos" :> Get '[JSON] [Todo]
+  :<|> "todos" :> Get '[JSON] [Entity Todo]
 
 
 api :: Proxy Api
