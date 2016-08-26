@@ -32,6 +32,12 @@ stack exec haskell-elm-todo-app
 halive src/Main.hs
 ```
 
+- run tests
+
+``` shell
+stack build --test
+```
+
 ### DB queries
 
 by using [httpie](https://github.com/jkbrzt/httpie):
