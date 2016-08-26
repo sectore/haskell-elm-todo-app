@@ -1,0 +1,38 @@
+{
+    "name": "haskell-elm-todo-app",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "start": "webpack-dev-server --hot",
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "postinstall": "./node_modules/.bin/elm-package install -y"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/sectore/haskell-elm-todo-app"
+    },
+    "keywords": [
+        "Elm"
+    ],
+    "author": "Jens Krause",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/sectore/haskell-elm-todo-app/issues"
+    },
+    "homepage": "https://github.com/sectore/haskell-elm-todo-app#readme",
+    "devDependencies": {
+        "autoprefixer": "^6.3.7",
+        "css-loader": "^0.24.0",
+        "elm": "^0.17.1",
+        "elm-hot-loader": "^0.3.3",
+        "elm-webpack-loader": "^3.0.3",
+        "file-loader": "^0.9.0",
+        "html-webpack-plugin": "^2.22.0",
+        "postcss-loader": "^0.11.0",
+        "precss": "^1.4.0",
+        "style-loader": "^0.13.1",
+        "webpack": "^1.13.1",
+        "webpack-dev-server": "^1.14.1"
+    }
+}
