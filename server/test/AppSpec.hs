@@ -15,16 +15,17 @@ import Servant.Client
 import Test.Mockery.Directory (inTempDirectory)
 import Database.Persist
 import Database.Persist.Sqlite (toSqlKey)
+import Data.Aeson
 import App (mkApp)
 import Api
 import Models
 
 
-createTodo :: Todo -> Manager -> BaseUrl -> ClientM (Key Todo)
-readTodo :: (Key Todo) -> Manager -> BaseUrl -> ClientM (Maybe Todo)
-updateTodo :: (Key Todo) -> Todo -> Manager -> BaseUrl -> ClientM NoContent
-deleteTodo :: (Key Todo) -> Manager -> BaseUrl -> ClientM NoContent
-getTodos :: Manager -> BaseUrl -> ClientM [Todo]
+createTodo :: Todo -> Manager -> BaseUrl -> ClientM TodoId
+readTodo :: TodoId -> Manager -> BaseUrl -> ClientM (Maybe (Entity Todo))
+updateTodo :: TodoId -> Todo -> Manager -> BaseUrl -> ClientM NoContent
+deleteTodo :: TodoId -> Manager -> BaseUrl -> ClientM NoContent
+getTodos :: Manager -> BaseUrl -> ClientM [Entity Todo]
 
 createTodo :<|> readTodo :<|> updateTodo :<|> deleteTodo :<|> getTodos = client api
 
@@ -41,7 +42,7 @@ spec = do
         let todo = Todo "Do something" True
         id <- try port (createTodo todo)
         -- todo is first entry, so it has to have an id of "1"
-        id `shouldBe` toSqlKey (read "1")        
+        id `shouldBe` toSqlKey (read "1") 
 
     describe "GET /todo" $ do
       it "responds with Nothing if no todo is available" $ \ port -> do
@@ -50,7 +51,8 @@ spec = do
       it "responds with a todo" $ \ port -> do
         let todo = Todo "Do something" True
         id <- try port (createTodo todo)
-        try port (readTodo id) `shouldReturn` (Just todo)
+        let entity = Entity id todo
+        try port (readTodo id) `shouldReturn` (Just entity)
 
 
     describe "DELETE /todo" $ do
@@ -59,9 +61,10 @@ spec = do
         let todoB = Todo "Do B" True
         idA <- try port (createTodo todoA)
         idB <- try port (createTodo todoB)
+        let entityB = Entity idB todoB
         try port (deleteTodo idA)
-        try port getTodos `shouldReturn` [todoB]
-        
+        try port getTodos `shouldReturn` [entityB]
+
 withApp :: (Int -> IO a) -> IO a
 withApp action =
   inTempDirectory $ do
