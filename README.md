@@ -2,7 +2,7 @@
 
 # haskell-elm-todo-app
 
-Todo app build with [Servant](http://haskell-servant.github.io/) ([Haskell](https://www.haskell.org/)) on server-side and [Elm](http://elm-lang.org/) on client-side
+Todo app build with [Haskell](https://www.haskell.org/) ([Servant](http://haskell-servant.github.io/), [Persistent](https://hackage.haskell.org/package/persistent), [Aeson](https://hackage.haskell.org/package/aeson)) on server-side and [Elm](http://elm-lang.org/) on client-side.
 
 ## Instructions
 
