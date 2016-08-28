@@ -33,6 +33,7 @@ executable haskell-elm-todo-app
                      , text
                      , transformers
                      , wai
+                     , wai-cors
                      , warp
   default-language:    Haskell2010
 

@@ -22,6 +22,7 @@ import qualified Database.Persist.Sqlite as Sqlite
 
 import           Network.Wai
 import           Network.Wai.Handler.Warp as Warp
+import           Network.Wai.Middleware.Cors (simpleCorsResourcePolicy, corsRequestHeaders, cors, corsMethods, simpleMethods)
 
 import           Servant
 
@@ -50,7 +51,7 @@ server pool =      createTodo
     readTodo' :: TodoId -> IO (Maybe (Entity Todo))
     readTodo' id = flip Sqlite.runSqlPersistMPool pool $ do
       Sqlite.selectFirst [TodoId ==. id] []
- 
+
     updateTodo' :: TodoId -> Todo -> IO NoContent
     updateTodo' id todo = flip Sqlite.runSqlPersistMPool pool $ do
       Sqlite.replace id todo
@@ -74,7 +75,14 @@ mkApp sqliteFile = do
     Sqlite.createSqlitePool (cs sqliteFile) 5
 
   runSqlPool (Sqlite.runMigration migrateAll) pool
-  return $ app pool
+  return $ corsMiddleware $ app pool
+
+corsMiddleware :: Middleware
+corsMiddleware = cors (const $ Just resourcePolicy)
+  where
+    resourcePolicy = simpleCorsResourcePolicy
+      { corsMethods = "DELETE":"PUT":simpleMethods -- simpleMethods are GET,HEAD,POST
+      , corsRequestHeaders = ["Content-Type"] }
 
 run :: FilePath -> IO ()
 run sqliteFile =
