@@ -2,8 +2,14 @@ module Main exposing (..)
 
 import Html exposing (..)
 import Html.App as Html
-import Html.Attributes exposing (..)
-import Html.Events exposing (..)
+import Http
+import Json.Decode as Decode exposing (Decoder, (:=))
+import Json.Decode.Pipeline as Pipeline
+import Task
+
+
+-- import Html.Attributes exposing (..)
+-- import Html.Events exposing (..)
 
 
 main : Program Never
@@ -21,12 +27,21 @@ main =
 
 
 type alias Model =
-    { count : Int }
+    { todos : List Todo
+    , selectedTodo : Maybe Todo
+    }
+
+
+type alias Todo =
+    { id : Int
+    , todoCompleted : Bool
+    , todoDescription : String
+    }
 
 
 init : ( Model, Cmd Msg )
 init =
-    ( Model 1, Cmd.none )
+    ( Model [] Nothing, getTodos )
 
 
 
@@ -34,14 +49,18 @@ init =
 
 
 type Msg
-    = Count
+    = FetchTodosDone (List Todo)
+    | FetchTodosFail Http.Error
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        Count ->
-            ( { model | count = model.count + 1 }, Cmd.none )
+        FetchTodosDone todos ->
+            { model | todos = todos } ! []
+
+        FetchTodosFail error ->
+            ( model, Cmd.none )
 
 
 
@@ -54,21 +73,42 @@ subscriptions model =
 
 
 
+-- HTTP
+
+
+getTodos : Cmd Msg
+getTodos =
+    Http.get todosDecoder "http://localhost:3000/todos/"
+        |> Task.perform FetchTodosFail FetchTodosDone
+
+
+todosDecoder : Decode.Decoder (List Todo)
+todosDecoder =
+    Decode.list todoDecoder
+
+
+todoDecoder : Decoder Todo
+todoDecoder =
+    Pipeline.decode Todo
+        |> Pipeline.required "id" Decode.int
+        |> Pipeline.required "todoCompleted" Decode.bool
+        |> Pipeline.required "todoDescription" Decode.string
+
+
+
 -- VIEW
+
+
+todoView : Todo -> Html Msg
+todoView todo =
+    li []
+        [ text todo.todoDescription ]
 
 
 view : Model -> Html Msg
 view model =
-    div [ class "mdl-grid" ]
-        [ div
-            [ class "mdl-cell mdl-cell--8-col mdl-cell--2-offset content" ]
-            [ h1 [] [ text "Elmoin Starter Kit" ]
-            , img [ class "logo", src "./elmoin-logo.png" ] []
-            , footer []
-                [ h3 [] [ text <| toString model.count ++ "x Moin Moin Elmoin!" ]
-                , a
-                    [ class "mdl-button mdl-js-button mdl-button--raised btn-more", onClick Count ]
-                    [ text "Mooooooooooore Moin!" ]
-                ]
-            ]
+    div []
+        [ ul
+            []
+            (List.map todoView model.todos)
         ]
