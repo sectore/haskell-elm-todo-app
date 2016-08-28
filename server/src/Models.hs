@@ -1,5 +1,7 @@
+{-# LANGUAGE DeriveGeneric              #-}
 {-# LANGUAGE EmptyDataDecls             #-}
 {-# LANGUAGE FlexibleContexts           #-}
+{-# LANGUAGE FlexibleInstances          #-}
 {-# LANGUAGE GADTs                      #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE MultiParamTypeClasses      #-}
@@ -7,17 +9,15 @@
 {-# LANGUAGE QuasiQuotes                #-}
 {-# LANGUAGE TemplateHaskell            #-}
 {-# LANGUAGE TypeFamilies               #-}
-{-# LANGUAGE DeriveGeneric              #-}
-{-# LANGUAGE FlexibleInstances          #-}
 
 module Models where
 
-import Data.Aeson
-import Data.Text
-import GHC.Generics
+import           Data.Aeson
+import           Data.Text
+import           GHC.Generics
 
-import Database.Persist.TH
-import Database.Persist
+import           Database.Persist
+import           Database.Persist.TH
 
 share [mkPersist sqlSettings, mkMigrate "migrateAll"] [persistLowerCase|
 Todo

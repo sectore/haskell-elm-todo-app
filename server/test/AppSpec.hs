@@ -2,23 +2,23 @@
 
 module AppSpec where
 
-import Test.Hspec
-import Test.Hspec.Wai (get, with, shouldRespondWith)
+import           Test.Hspec
+import           Test.Hspec.Wai             (get, shouldRespondWith, with)
 
-import Network.HTTP.Client
-import Network.Wai (Application)
-import Network.Wai.Handler.Warp
-import Control.Exception (throwIO, ErrorCall(..))
-import Control.Monad.Trans.Except
-import Servant.API
-import Servant.Client
-import Test.Mockery.Directory (inTempDirectory)
-import Database.Persist
-import Database.Persist.Sqlite (toSqlKey)
-import Data.Aeson
-import App (mkApp)
-import Api
-import Models
+import           Api
+import           App                        (mkApp)
+import           Control.Exception          (ErrorCall (..), throwIO)
+import           Control.Monad.Trans.Except
+import           Data.Aeson
+import           Database.Persist
+import           Database.Persist.Sqlite    (toSqlKey)
+import           Models
+import           Network.HTTP.Client
+import           Network.Wai                (Application)
+import           Network.Wai.Handler.Warp
+import           Servant.API
+import           Servant.Client
+import           Test.Mockery.Directory     (inTempDirectory)
 
 
 createTodo :: Todo -> Manager -> BaseUrl -> ClientM TodoId
@@ -36,13 +36,13 @@ spec = do
     describe "GET /todos" $ do
       it "responds with an empty list by default" $ \ port -> do
         try port getTodos `shouldReturn` []
- 
+
     describe "POST /todo" $ do
       it "responds with a key of new created todo" $ \ port -> do
         let todo = Todo "Do something" True
         id <- try port (createTodo todo)
         -- todo is first entry, so it has to have an id of "1"
-        id `shouldBe` toSqlKey (read "1") 
+        id `shouldBe` toSqlKey (read "1")
 
     describe "GET /todo" $ do
       it "responds with Nothing if no todo is available" $ \ port -> do

@@ -10,23 +10,26 @@ module App where
 
 import           Control.Monad.IO.Class
 
-import           Control.Monad.Logger (runStderrLoggingT)
+import           Control.Monad.Logger        (runStderrLoggingT)
 
-import           Control.Monad.Catch (throwM)
+import           Control.Monad.Catch         (throwM)
 
 import           Data.String.Conversions
 
 import           Database.Persist
 import           Database.Persist.Sql
-import qualified Database.Persist.Sqlite as Sqlite
+import qualified Database.Persist.Sqlite     as Sqlite
 
 import           Network.Wai
-import           Network.Wai.Handler.Warp as Warp
-import           Network.Wai.Middleware.Cors (simpleCorsResourcePolicy, corsRequestHeaders, cors, corsMethods, simpleMethods)
+import           Network.Wai.Handler.Warp    as Warp
+import           Network.Wai.Middleware.Cors (cors, corsMethods,
+                                              corsRequestHeaders,
+                                              simpleCorsResourcePolicy,
+                                              simpleMethods)
 
 import           Servant
 
-import           Data.Text hiding (map)
+import           Data.Text                   hiding (map)
 
 import           Api
 import           Models

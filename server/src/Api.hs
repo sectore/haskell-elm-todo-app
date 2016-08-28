@@ -1,19 +1,19 @@
 {-# LANGUAGE DataKinds         #-}
-{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE LambdaCase        #-}
+{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TypeFamilies      #-}
 {-# LANGUAGE TypeOperators     #-}
 
 module Api where
 
-import Data.Proxy
-import Data.Text
+import           Data.Proxy
+import           Data.Text
 
-import Database.Persist
+import           Database.Persist
 
-import Models
+import           Models
 
-import Servant.API
+import           Servant.API
 
 
 type Api =
