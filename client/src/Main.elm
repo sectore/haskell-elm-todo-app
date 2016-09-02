@@ -2,19 +2,16 @@ module Main exposing (..)
 
 import Html exposing (..)
 import Html.App as Html
-import Http
-import Json.Decode as Decode exposing (Decoder, (:=))
-import Json.Decode.Pipeline as Pipeline
-import Task
 import Material
+import Material.Color as Color
 import Material.Layout as Layout
 import Material.Scheme as Scheme
-import Material.Color as Color
-import Material.List as Lists
-
-
--- import Html.Attributes exposing (..)
--- import Html.Events exposing (..)
+import Todo.Update as Todo
+import Todos.Api as Todos
+import Todos.Model as Todos
+import Todos.Update as Todos
+import Todos.Update as Todos
+import Todos.View as Todos
 
 
 main : Program Never
@@ -23,7 +20,7 @@ main =
         { init = init
         , view = view
         , update = update
-        , subscriptions = subscriptions
+        , subscriptions = \_ -> Sub.none
         }
 
 
@@ -32,30 +29,21 @@ main =
 
 
 type alias Model =
-    { todos : List Todo
-    , selectedTodo : Maybe Todo
-    , mdl : Material.Model
-    }
-
-
-type alias Todo =
-    { id : Int
-    , todoCompleted : Bool
-    , todoDescription : String
+    { mdl : Material.Model
+    , todos : Todos.Model
     }
 
 
 initialModel : Model
 initialModel =
     { mdl = Material.model
-    , todos = []
-    , selectedTodo = Nothing
+    , todos = Todos.initialModel
     }
 
 
 init : ( Model, Cmd Msg )
 init =
-    ( initialModel, getTodos )
+    ( initialModel, Cmd.map TodosMsg Todos.get )
 
 
 
@@ -64,8 +52,8 @@ init =
 
 type Msg
     = Mdl (Material.Msg Msg)
-    | FetchTodosDone (List Todo)
-    | FetchTodosFail Http.Error
+    | TodosMsg Todos.Msg
+    | TodoMsg Todo.Msg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -74,53 +62,25 @@ update msg model =
         Mdl msg' ->
             Material.update msg' model
 
-        FetchTodosDone todos ->
-            { model | todos = todos } ! []
+        TodosMsg msg' ->
+            let
+                ( updatedModel, cmd ) =
+                    Todos.update msg' model.todos
+            in
+                ( { model | todos = updatedModel }, Cmd.map TodosMsg cmd )
 
-        FetchTodosFail error ->
+        -- TodoMsg msg' ->
+        --     let
+        --         ( updatedModel, cmd ) =
+        --             Todo.update msg' model.todo
+        --     in
+        --         ( { model | todo = updatedModel }, Cmd.map TodoMsg cmd )
+        _ ->
             ( model, Cmd.none )
 
 
 
--- SUBSCRIPTIONS
-
-
-subscriptions : Model -> Sub Msg
-subscriptions model =
-    Sub.none
-
-
-
--- HTTP
-
-
-getTodos : Cmd Msg
-getTodos =
-    Http.get todosDecoder "http://localhost:3000/todos/"
-        |> Task.perform FetchTodosFail FetchTodosDone
-
-
-todosDecoder : Decode.Decoder (List Todo)
-todosDecoder =
-    Decode.list todoDecoder
-
-
-todoDecoder : Decoder Todo
-todoDecoder =
-    Pipeline.decode Todo
-        |> Pipeline.required "id" Decode.int
-        |> Pipeline.required "todoCompleted" Decode.bool
-        |> Pipeline.required "todoDescription" Decode.string
-
-
-
 -- VIEW
-
-
-todoView : Todo -> Html Msg
-todoView todo =
-    Lists.li []
-        [ text todo.todoDescription ]
 
 
 view : Model -> Html Msg
@@ -134,13 +94,9 @@ view model =
         , tabs = ( [], [] )
         , main =
             [ div []
-                [ Lists.ul
-                    []
-                    (List.map todoView model.todos)
-                ]
+                [ Html.map TodoMsg (Todos.view model.todos) ]
             ]
         }
-        -- mdl color scheme
         |> Scheme.topWithScheme Color.Brown Color.Amber
 
 
