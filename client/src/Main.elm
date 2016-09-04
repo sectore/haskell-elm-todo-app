@@ -1,18 +1,18 @@
 module Main exposing (..)
 
 import Api
-import Maybe
 import Html exposing (..)
 import Html.App as Html
 import Material
-import Material.Layout as Layout
 import Material.Color as Color
+import Material.Layout as Layout
+import Material.Options as Options
 import Material.Scheme as Scheme
+import Material.Grid as Grid
+import Material.Typography as Typo
+import Maybe
 import Todo.NewTodo as NewTodo
 import Todos.Todos as Todos
-
-
--- import Todo.Update as Todo
 
 
 type alias Model =
@@ -34,10 +34,6 @@ type Msg
     = Mdl (Material.Msg Msg)
     | TodosMsg Todos.Msg
     | NewTodoMsg NewTodo.Msg
-
-
-
--- | TodoMsg Todo.Msg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -67,25 +63,32 @@ view model =
         model.mdl
         [ Layout.fixedHeader
         ]
-        { header = header model
+        { header = headerView model
         , drawer = []
         , tabs = ( [], [] )
-        , main =
-            [ div []
-                [ h1 [] [ text <| Maybe.withDefault "" model.newTodo.description ]
-                , Html.map TodosMsg (Todos.listView model.todos)
-                ]
-            ]
+        , main = mainView model
         }
         |> Scheme.topWithScheme Color.Brown Color.Amber
 
 
-header : Model -> List (Html Msg)
-header model =
+headerView : Model -> List (Html Msg)
+headerView model =
     [ Layout.row []
-        [ Layout.title [] [ text "Haskell Elm Todo App" ]
-        , Layout.spacer
-        , Html.map NewTodoMsg (NewTodo.view model.newTodo)
+        [ Options.styled p
+            [ Typo.display1, Typo.uppercase ]
+            [ text "Haskell Elm Todo App" ]
+        ]
+    ]
+
+
+mainView : Model -> List (Html Msg)
+mainView model =
+    [ Grid.grid []
+        [ Grid.cell [ Grid.offset Grid.All 1, Grid.size Grid.All 10 ]
+            [ Html.map NewTodoMsg (NewTodo.view model.newTodo)
+            , h1 [] [ text <| Maybe.withDefault "" model.newTodo.description ]
+            , Html.map TodosMsg (Todos.listView model.todos)
+            ]
         ]
     ]
 

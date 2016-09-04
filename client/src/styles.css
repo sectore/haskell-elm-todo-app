@@ -1,24 +1,3 @@
 $elm-color1: #7fd13b;
 $elm-color2: #60b5cc;
 $elm-color3: #5a6378;
-
-.logo {
-  height: 30%;
-}
-
-.content {
-  text-align: center;
-}
-
-.btn-more {
-  color: #FFF;
-  background-color: $elm-color1;
-}
-
-.btn-more:hover {
-  background-color: $elm-color2;
-}
-
-.btn-more:active {
-  background-color: $elm-color3;
-}

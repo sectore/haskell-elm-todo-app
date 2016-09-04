@@ -2,7 +2,11 @@ module Todo.NewTodo exposing (..)
 
 import Html exposing (..)
 import Material
+import Material.Color as Color
+import Material.Grid as Grid
+import Material.Options as Options
 import Material.Textfield as Textfield
+
 
 type alias Model =
     { mdl : Material.Model
@@ -43,4 +47,9 @@ view model =
         model.mdl
         [ Textfield.label "Enter new Todo"
         , Textfield.onInput Input
+        , Options.cs "mdl-cell mdl-cell--12-col"
+        , Options.inner
+            [ Options.id "hello-input"
+            , Color.text Color.black
+            ]
         ]
