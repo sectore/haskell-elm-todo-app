@@ -47,7 +47,7 @@ view model =
         model.mdl
         [ Textfield.label "Enter new Todo"
         , Textfield.onInput Input
-        , Options.cs "mdl-cell mdl-cell--12-col"
+        , Options.css "width" "100%"
         , Options.inner
             [ Options.id "hello-input"
             , Color.text Color.black
