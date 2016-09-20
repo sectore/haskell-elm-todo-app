@@ -58,6 +58,7 @@ test-suite haskell-elm-todo-app-test
                      , warp
                      , wai
                      , wai-extra
+                     , wai-cors
                      , persistent
                      , persistent-template
                      , persistent-sqlite
