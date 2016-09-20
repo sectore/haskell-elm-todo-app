@@ -2,7 +2,6 @@ module Todos.Todos exposing (..)
 
 import Html exposing (..)
 import Http
-import Material.List as Lists
 import Todo.Todo as Todo
 
 
@@ -40,12 +39,11 @@ update msg model =
 
 listView : Model -> Html Msg
 listView model =
-    Lists.ul
-        []
+    ul []
         (List.map itemView model.todos)
 
 
 itemView : Todo.Model -> Html Msg
 itemView todo =
-    Lists.li []
-        [ text todo.todoDescription ]
+    li []
+        [ text todo.description ]

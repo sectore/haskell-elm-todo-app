@@ -18,8 +18,8 @@ todoDecoder : Decoder Todo.Model
 todoDecoder =
     Pipeline.decode Todo.Model
         |> Pipeline.required "id" Decode.int
-        |> Pipeline.required "todoCompleted" Decode.bool
-        |> Pipeline.required "todoDescription" Decode.string
+        |> Pipeline.required "completed" Decode.bool
+        |> Pipeline.required "description" Decode.string
 
 
 todosDecoder : Decode.Decoder (List Todo.Model)

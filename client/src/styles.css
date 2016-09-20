@@ -1,3 +1,19 @@
 $elm-color1: #7fd13b;
 $elm-color2: #60b5cc;
 $elm-color3: #5a6378;
+
+
+.mdl-layout__header {
+
+
+}
+
+.body {
+  background: white;
+
+  @at-root{
+    .child {
+      background: black;
+    }
+  }
+}
