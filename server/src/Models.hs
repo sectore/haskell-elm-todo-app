@@ -1,6 +1,4 @@
 {-# LANGUAGE DeriveGeneric              #-}
-{-# LANGUAGE EmptyDataDecls             #-}
-{-# LANGUAGE FlexibleContexts           #-}
 {-# LANGUAGE FlexibleInstances          #-}
 {-# LANGUAGE GADTs                      #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
@@ -12,12 +10,11 @@
 
 module Models where
 
-import           Data.Aeson
-import           Data.Text
-import           GHC.Generics
-
-import           Database.Persist
-import           Database.Persist.TH
+import           Data.Aeson          (FromJSON, ToJSON, parseJSON, toJSON)
+import           Database.Persist    (Entity, entityIdFromJSON, entityIdToJSON)
+import           Database.Persist.TH (mkMigrate, mkPersist, persistLowerCase,
+                                      share, sqlSettings)
+import           GHC.Generics        (Generic)
 
 share [mkPersist sqlSettings, mkMigrate "migrateAll"] [persistLowerCase|
 Todo

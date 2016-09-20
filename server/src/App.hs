@@ -1,38 +1,32 @@
 {-# LANGUAGE DataKinds         #-}
-{-# LANGUAGE DeriveGeneric     #-}
-{-# LANGUAGE LambdaCase        #-}
+{-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE TypeFamilies      #-}
-{-# LANGUAGE TypeOperators     #-}
-
 
 module App where
 
-import           Control.Monad.IO.Class
-
+import           Api                         (Api, api)
+import           Control.Monad.Catch         ()
+import           Control.Monad.IO.Class      (liftIO)
 import           Control.Monad.Logger        (runStderrLoggingT)
-
-import           Control.Monad.Catch         (throwM)
-
-import           Data.String.Conversions
-
-import           Database.Persist
-import           Database.Persist.Sql
-import qualified Database.Persist.Sqlite     as Sqlite
-
-import           Network.Wai
+import           Data.String.Conversions     (cs)
+import           Data.Text                   ()
+import           Database.Persist.Sql        (ConnectionPool, Entity,
+                                              runSqlPersistMPool, runSqlPool,
+                                              (==.))
+import           Database.Persist.Sqlite     (createSqlitePool, delete, insert,
+                                              replace, runMigration,
+                                              selectFirst, selectList)
+-- import           Models                      (Todo, TodoId, migrateAll)
+import           Models
+import           Network.Wai                 (Application, Middleware)
 import           Network.Wai.Handler.Warp    as Warp
 import           Network.Wai.Middleware.Cors (cors, corsMethods,
                                               corsRequestHeaders,
                                               simpleCorsResourcePolicy,
                                               simpleMethods)
-
-import           Servant
-
-import           Data.Text                   hiding (map)
-
-import           Api
-import           Models
+import           Servant.API
+-- import           Servant.API                 ((:<|>), NoContent)
+import           Servant.Server              (Server, serve)
 
 server :: ConnectionPool -> Server Api
 server pool =      createTodo
@@ -41,43 +35,43 @@ server pool =      createTodo
               :<|> deleteTodo
               :<|> readTodos
   where
-    createTodo todo    = liftIO $ createTodo' todo
-    readTodo id        = liftIO $ readTodo' id
-    updateTodo id todo = liftIO $ updateTodo' id todo
-    deleteTodo id      = liftIO $ deleteTodo' id
-    readTodos          = liftIO $ readTodos'
+    createTodo todo        = liftIO $ createTodo' todo
+    readTodo todoId        = liftIO $ readTodo' todoId
+    updateTodo todoId todo = liftIO $ updateTodo' todoId todo
+    deleteTodo todoId      = liftIO $ deleteTodo' todoId
+    readTodos              = liftIO readTodos'
 
     createTodo' :: Todo -> IO TodoId
-    createTodo' todo = flip Sqlite.runSqlPersistMPool pool $ do
-      Sqlite.insert todo
+    createTodo' todo = flip runSqlPersistMPool pool $
+      insert todo
 
     readTodo' :: TodoId -> IO (Maybe (Entity Todo))
-    readTodo' id = flip Sqlite.runSqlPersistMPool pool $ do
-      Sqlite.selectFirst [TodoId ==. id] []
+    readTodo' todoId = flip runSqlPersistMPool pool $
+      selectFirst [TodoId ==. todoId] []
 
     updateTodo' :: TodoId -> Todo -> IO NoContent
-    updateTodo' id todo = flip Sqlite.runSqlPersistMPool pool $ do
-      Sqlite.replace id todo
+    updateTodo' todoId todo = flip runSqlPersistMPool pool $ do
+      replace todoId todo
       return NoContent
 
     deleteTodo' :: TodoId -> IO NoContent
-    deleteTodo' id = flip runSqlPersistMPool pool $ do
-      Sqlite.delete id
+    deleteTodo' todoId = flip runSqlPersistMPool pool $ do
+      delete todoId
       return NoContent
 
     readTodos' :: IO [Entity Todo]
-    readTodos' = flip runSqlPersistMPool pool $ do
-      Sqlite.selectList [] []
+    readTodos' = flip runSqlPersistMPool pool $
+      selectList [] []
 
 app :: ConnectionPool -> Application
 app pool = serve api $ server pool
 
 mkApp :: FilePath -> IO Application
 mkApp sqliteFile = do
-  pool <- runStderrLoggingT $ do
-    Sqlite.createSqlitePool (cs sqliteFile) 5
+  pool <- runStderrLoggingT $
+    createSqlitePool (cs sqliteFile) 5
 
-  runSqlPool (Sqlite.runMigration migrateAll) pool
+  runSqlPool (runMigration migrateAll) pool
   return $ corsMiddleware $ app pool
 
 corsMiddleware :: Middleware

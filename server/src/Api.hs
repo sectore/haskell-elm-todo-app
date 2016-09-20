@@ -1,19 +1,13 @@
-{-# LANGUAGE DataKinds         #-}
-{-# LANGUAGE LambdaCase        #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE TypeFamilies      #-}
-{-# LANGUAGE TypeOperators     #-}
+{-# LANGUAGE DataKinds     #-}
+{-# LANGUAGE TypeOperators #-}
 
 module Api where
 
 import           Data.Proxy
-import           Data.Text
-
-import           Database.Persist
-
-import           Models
-
-import           Servant.API
+import           Database.Persist (Entity)
+import           Models           (Todo, TodoId)
+import           Servant.API      ((:<|>), (:>), Capture, Delete, Get, JSON,
+                                   NoContent, Post, Put, ReqBody)
 
 
 type Api =
