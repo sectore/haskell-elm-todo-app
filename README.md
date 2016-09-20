@@ -2,7 +2,7 @@
 
 # haskell-elm-todo-app
 
-Todo app build with [Haskell](https://www.haskell.org/) ([Servant](http://haskell-servant.github.io/), [Persistent](https://hackage.haskell.org/package/persistent), [Aeson](https://hackage.haskell.org/package/aeson)) on server-side and [Elm](http://elm-lang.org/) on client-side.
+Todo app build with [Haskell](https://www.haskell.org/) ([Servant](http://haskell-servant.github.io/), [Persistent](https://hackage.haskell.org/package/persistent) on server-side and [Elm](http://elm-lang.org/) on client-side.
 
 ## Instructions
 
@@ -45,7 +45,7 @@ by using [httpie](https://github.com/jkbrzt/httpie):
 ``` shell
 
 # add a todo
-http POST localhost:3000/todo/ todoCompleted:=false todoDescription="my todo"
+http POST localhost:3000/todo/ completed:=false description="my todo"
 
 # get a todo
 http localhost:3000/todo/1
@@ -54,7 +54,7 @@ http localhost:3000/todo/1
 http DELETE localhost:3000/todo/1
 
 # update a todo
-http PUT localhost:3000/todo/1 todoDescription="any other description" todoCompleted:=true
+http PUT localhost:3000/todo/1 description="any other description" completed:=true
 
 # get all todos
 http localhost:3000/todos

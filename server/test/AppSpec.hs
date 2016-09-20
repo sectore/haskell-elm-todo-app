@@ -9,7 +9,6 @@ import           Api
 import           App                        (mkApp)
 import           Control.Exception          (ErrorCall (..), throwIO)
 import           Control.Monad.Trans.Except
-import           Data.Aeson
 import           Database.Persist
 import           Database.Persist.Sqlite    (toSqlKey)
 import           Models
