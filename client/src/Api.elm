@@ -1,17 +1,16 @@
-module Api exposing (..)
+module Api exposing (getTodos, saveTodo)
 
 import Http
-import Json.Decode as Decode exposing (Decoder)
+import Json.Decode as Decode exposing (Decoder, int, (:=))
+import Json.Encode as Encode
 import Json.Decode.Pipeline as Pipeline
 import Task
 import Todo.Todo as Todo
-import Todos.Todos as Todos exposing (Msg(..))
 
 
-getTodos : Cmd Msg
+getTodos : Task.Task Http.Error (List Todo.Model)
 getTodos =
     Http.get todosDecoder "http://localhost:3000/todos/"
-        |> Task.perform Todos.FetchTodosFail Todos.FetchTodosDone
 
 
 todoDecoder : Decoder Todo.Model
@@ -25,3 +24,38 @@ todoDecoder =
 todosDecoder : Decode.Decoder (List Todo.Model)
 todosDecoder =
     Decode.list todoDecoder
+
+
+todoIdDecoder : Decoder Int
+todoIdDecoder =
+    "id" := int
+
+
+todoEncoded : Todo.Model -> Encode.Value
+todoEncoded todo =
+    let
+        list =
+            [ ( "completed", Encode.bool todo.completed )
+            , ( "description", Encode.string todo.description )
+            ]
+    in
+        list |> Encode.object
+
+
+saveTodo : Todo.Model -> Task.Task Http.Error Int
+saveTodo todo =
+    let
+        body =
+            todoEncoded todo
+                |> Encode.encode 0
+                |> Http.string
+
+        config =
+            { verb = "POST"
+            , headers = [ ( "Content-Type", "application/json" ) ]
+            , url = "http://localhost:3000/todo/"
+            , body = body
+            }
+    in
+        Http.send Http.defaultSettings config
+            |> Http.fromJson todoIdDecoder

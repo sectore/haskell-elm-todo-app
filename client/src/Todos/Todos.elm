@@ -3,6 +3,8 @@ module Todos.Todos exposing (..)
 import Html exposing (..)
 import Http
 import Todo.Todo as Todo
+import Task
+import Api
 
 
 type alias Model =
@@ -35,6 +37,12 @@ update msg model =
 
         NoOp ->
             ( model, Cmd.none )
+
+
+getTodos : Cmd Msg
+getTodos =
+    Api.getTodos
+        |> Task.perform FetchTodosFail FetchTodosDone
 
 
 listView : Model -> Html Msg

@@ -3,10 +3,9 @@ module Main exposing (..)
 import Api
 import Html exposing (..)
 import Html.App as Html
-import Maybe
 import Todo.NewTodo as NewTodo
 import Todos.Todos as Todos
-
+import Task
 
 type alias Model =
     { todos : Todos.Model
@@ -48,14 +47,14 @@ view : Model -> Html Msg
 view model =
     div []
         [ Html.map NewTodoMsg (NewTodo.view model.newTodo)
-        , h1 [] [ text <| Maybe.withDefault "" model.newTodo.description ]
+        , h1 [] [ text <| model.newTodo.todo.description ]
         , Html.map TodosMsg (Todos.listView model.todos)
         ]
 
 
 init : ( Model, Cmd Msg )
 init =
-    ( initialModel, Cmd.map TodosMsg Api.getTodos )
+    ( initialModel, Cmd.map TodosMsg Todos.getTodos )
 
 
 main : Program Never

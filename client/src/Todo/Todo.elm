@@ -1,5 +1,7 @@
 module Todo.Todo exposing (..)
 
+import Http
+
 
 type alias ViewModel =
     { todo : Model
