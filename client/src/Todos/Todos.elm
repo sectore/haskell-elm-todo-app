@@ -23,6 +23,7 @@ initialModel =
 type Msg
     = FetchTodosDone (List Todo.Model)
     | FetchTodosFail Http.Error
+    | AddNewTodo Todo.Model
     | NoOp
 
 
@@ -34,6 +35,9 @@ update msg model =
 
         FetchTodosFail error ->
             ( model, Cmd.none )
+
+        AddNewTodo todo ->
+            ( { model | todos = model.todos ++ [ todo ] }, Cmd.none )
 
         NoOp ->
             ( model, Cmd.none )
