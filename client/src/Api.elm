@@ -1,7 +1,7 @@
 module Api exposing (getTodos, saveTodo)
 
 import Http
-import Json.Decode as Decode exposing (Decoder, int, (:=))
+import Json.Decode as Decode exposing (Decoder)
 import Json.Encode as Encode
 import Json.Decode.Pipeline as Pipeline
 import Task
@@ -21,14 +21,9 @@ todoDecoder =
         |> Pipeline.required "description" Decode.string
 
 
-todosDecoder : Decode.Decoder (List Todo.Model)
+todosDecoder : Decoder (List Todo.Model)
 todosDecoder =
     Decode.list todoDecoder
-
-
-todoIdDecoder : Decoder Int
-todoIdDecoder =
-    "id" := int
 
 
 todoEncoded : Todo.Model -> Encode.Value
@@ -58,4 +53,4 @@ saveTodo todo =
             }
     in
         Http.send Http.defaultSettings config
-            |> Http.fromJson todoIdDecoder
+            |> Http.fromJson Decode.int

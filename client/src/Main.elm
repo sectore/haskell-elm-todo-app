@@ -1,11 +1,10 @@
 module Main exposing (..)
 
-import Api
 import Html exposing (..)
 import Html.App as Html
 import Todo.NewTodo as NewTodo
 import Todos.Todos as Todos
-import Task
+
 
 type alias Model =
     { todos : Todos.Model
@@ -37,17 +36,25 @@ update msg model =
 
         NewTodoMsg msg' ->
             let
-                ( updatedModel, cmd ) =
+                ( updatedModel, cmd' ) =
                     NewTodo.update msg' model.newTodo
+
+                cmd =
+                    case msg' of
+                        -- load all todos after saving a new one
+                        NewTodo.SaveTodoDone _ ->
+                            Cmd.map TodosMsg Todos.getTodos
+
+                        _ ->
+                            Cmd.map NewTodoMsg cmd'
             in
-                ( { model | newTodo = updatedModel }, Cmd.map NewTodoMsg cmd )
+                ( { model | newTodo = updatedModel }, cmd )
 
 
 view : Model -> Html Msg
 view model =
     div []
         [ Html.map NewTodoMsg (NewTodo.view model.newTodo)
-        , h1 [] [ text <| model.newTodo.todo.description ]
         , Html.map TodosMsg (Todos.listView model.todos)
         ]
 

@@ -3,12 +3,12 @@ module Todo.NewTodo exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onInput, keyCode, on)
-import Debug exposing (log)
 import Json.Decode as Decode
 import Api exposing (saveTodo)
 import Todo.Todo as Todo
 import Http
 import Task
+
 
 type alias Model =
     { todo : Todo.Model
@@ -48,26 +48,20 @@ update msg model =
                 ( { model | todo = { todo' | description = value } }, Cmd.none )
 
         Enter ->
-            Debug.log "enter"
-                ( { model | request = True }
-                , saveTodo model.todo
-                )
+            ( { model | request = True }
+            , saveTodo model.todo
+            )
 
         Cancel ->
-            Debug.log "cancel"
-                ( { model | todo = emptyTodo }, Cmd.none )
+            ( { model | todo = emptyTodo }, Cmd.none )
 
         SaveTodoDone id' ->
-            let
-                todo' =
-                    model.todo
-            in
-                ( { model
-                    | request = False
-                    , todo = { todo' | id = id' }
-                  }
-                , Cmd.none
-                )
+            ( { model
+                | request = False
+                , todo = emptyTodo
+              }
+            , Cmd.none
+            )
 
         SaveTodoFail error ->
             ( { model | request = False }, Cmd.none )
@@ -97,7 +91,7 @@ view model =
 onKeyDown : Attribute Msg
 onKeyDown =
     let
-        decoder keyCode' =
+        keyDecoder keyCode' =
             case keyCode' of
                 13 ->
                     Enter
@@ -108,4 +102,4 @@ onKeyDown =
                 _ ->
                     NoOp
     in
-        on "keydown" (Decode.map decoder keyCode)
+        on "keydown" (Decode.map keyDecoder keyCode)
