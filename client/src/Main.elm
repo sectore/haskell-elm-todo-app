@@ -53,15 +53,13 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    div [ class "" ]
+    div []
         [ div
-            [ class "center py4 bg-black bg-cover bg-center header"
+            [ class "center bg-black bg-cover bg-center header" ]
+            [ div [ class "bg-darken-4 py4" ]
+                [ Html.map NewTodoMsg (NewTodo.view model.newTodo) ]
             ]
-            [ Html.map NewTodoMsg (NewTodo.view model.newTodo)
-            ]
-        , div [ class "" ]
-            [ Html.map TodosMsg (Todos.listView model.todos)
-            ]
+        , Html.map TodosMsg (Todos.listView model.todos)
         ]
 
 

@@ -93,7 +93,7 @@ view model =
             []
         , div [ class "" ]
             [ button
-                [ class "h3 px4 py2 btn btn-outline lime bg-darken-2"
+                [ class "h3 px4 py2 btn btn-outline lime"
                 , onClick Enter
                 ]
                 [ text "Add Todo" ]
