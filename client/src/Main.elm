@@ -36,34 +36,18 @@ update msg model =
 
         NewTodoMsg msg' ->
             let
-                ( newTodoModel, newTodoCmd ) =
+                ( newTodoModel, cmd' ) =
                     NewTodo.update msg' model.newTodo
+
+                cmd =
+                    case msg' of
+                        NewTodo.SaveTodoDone _ ->
+                            Cmd.map TodosMsg Todos.getTodos
+
+                        _ ->
+                            Cmd.map NewTodoMsg cmd'
             in
-                case msg' of
-                    -- add new todo to todo list w/o an extra request
-                    NewTodo.SaveTodoDone id' ->
-                        let
-                            newTodo =
-                                model.newTodo.todo
-
-                            newTodo' =
-                                { newTodo | id = id' }
-
-                            ( todosModel, todosCmd ) =
-                                Todos.update (Todos.AddNewTodo newTodo') model.todos
-                        in
-                            ( { model
-                                | newTodo = newTodoModel
-                                , todos = todosModel
-                              }
-                            , Cmd.batch
-                                [ Cmd.map TodosMsg todosCmd
-                                , Cmd.map NewTodoMsg newTodoCmd
-                                ]
-                            )
-
-                    _ ->
-                        ( { model | newTodo = newTodoModel }, Cmd.map NewTodoMsg newTodoCmd )
+                ( { model | newTodo = newTodoModel }, cmd )
 
 
 view : Model -> Html Msg
