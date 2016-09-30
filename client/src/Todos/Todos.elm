@@ -1,5 +1,6 @@
 module Todos.Todos exposing (..)
 
+import Html.Attributes exposing (..)
 import Html exposing (..)
 import Http
 import Todo.Todo as Todo
@@ -47,11 +48,17 @@ getTodos =
 
 listView : Model -> Html Msg
 listView model =
-    ul []
+    ul [ class "list-reset m0" ]
         (List.map itemView model.todos)
 
 
 itemView : Todo.Model -> Html Msg
 itemView todo =
-    li []
-        [ text todo.description ]
+    li [ class "flex flex-center h1 p2 border-bottom gray" ]
+        [ button [ class "h4 regular italic btn pl0" ] [ text "Done" ]
+        , div [ class "flex-auto" ]
+            [ text todo.description
+            ]
+        , button [ class "h4 regular btn" ] [ text "Edit" ]
+        , button [ class "h4 regular btn" ] [ text "Delete" ]
+        ]

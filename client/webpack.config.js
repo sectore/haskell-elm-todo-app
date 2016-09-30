@@ -1,8 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const autoprefixer = require( 'autoprefixer' );
-const precss = require( 'precss' );
 
 const PATHS = {
 	src: './src/'
@@ -27,8 +25,12 @@ module.exports = {
 	},
 	module: {
 		loaders: [{
-			test: /\.(eot|ttf|woff|woff2|svg|png|jpg|gif)$/,
-			loader: 'file-loader'
+			test: /\.(png|jpg|gif)$/,
+			loader: 'file'
+		},
+		{
+			test: /\.(eot|svg|ttf|woff(2)?)(\?v=\d+\.\d+\.\d+)?/,
+			loader: 'url'
 		},
 		{
 			test: /\.elm$/,
@@ -36,8 +38,9 @@ module.exports = {
 			loader:  'elm-hot!elm-webpack?verbose=true&warn=true'
 		},
 		{
-			test: /\.(css)$/,
-			loader: 'style-loader!css-loader!postcss-loader'
+			test: /\.css$/,
+		  loader: 'style!css!postcss',
+		  exclude: /node_modules/,
 		}
 	]},
 	plugins: [
@@ -49,7 +52,15 @@ module.exports = {
 		})
 	],
 	postcss: function () {
-		return [precss, autoprefixer({ browsers: 'last 2 versions' })];
+		return [
+			require('postcss-modules-local-by-default'),
+			require('postcss-import')({
+				addDependencyTo: webpack,
+			}),
+			require('postcss-cssnext')({
+				browsers: ['last 2 versions']
+			})
+		];
 	},
 	devServer: {
 		inline: true,

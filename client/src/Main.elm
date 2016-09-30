@@ -2,6 +2,7 @@ module Main exposing (..)
 
 import Html exposing (..)
 import Html.App as Html
+import Html.Attributes exposing (..)
 import Todo.NewTodo as NewTodo
 import Todos.Todos as Todos
 
@@ -52,9 +53,15 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    div []
-        [ Html.map NewTodoMsg (NewTodo.view model.newTodo)
-        , Html.map TodosMsg (Todos.listView model.todos)
+    div [ class "" ]
+        [ div
+            [ class "center py4 bg-black bg-cover bg-center header"
+            ]
+            [ Html.map NewTodoMsg (NewTodo.view model.newTodo)
+            ]
+        , div [ class "" ]
+            [ Html.map TodosMsg (Todos.listView model.todos)
+            ]
         ]
 
 
