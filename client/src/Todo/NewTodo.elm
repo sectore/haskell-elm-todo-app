@@ -16,14 +16,9 @@ type alias Model =
     }
 
 
-emptyTodo : Todo.Model
-emptyTodo =
-    Todo.Model -1 False ""
-
-
 initialModel : Model
 initialModel =
-    { todo = emptyTodo
+    { todo = Todo.emptyTodo
     , request = False
     }
 
@@ -32,8 +27,8 @@ type Msg
     = Input String
     | Enter
     | Cancel
-    | SaveTodoDone Int
-    | SaveTodoFail Http.Error
+    | SaveDone Int
+    | SaveFail Http.Error
     | NoOp
 
 
@@ -53,17 +48,17 @@ update msg model =
             )
 
         Cancel ->
-            ( { model | todo = emptyTodo }, Cmd.none )
+            ( { model | todo = Todo.emptyTodo }, Cmd.none )
 
-        SaveTodoDone id' ->
+        SaveDone id' ->
             ( { model
                 | request = False
-                , todo = emptyTodo
+                , todo = Todo.emptyTodo
               }
             , Cmd.none
             )
 
-        SaveTodoFail error ->
+        SaveFail error ->
             ( { model | request = False }, Cmd.none )
 
         NoOp ->
@@ -73,7 +68,7 @@ update msg model =
 saveTodo : Todo.Model -> Cmd Msg
 saveTodo todo =
     Api.saveTodo todo
-        |> Task.perform SaveTodoFail SaveTodoDone
+        |> Task.perform SaveFail SaveDone
 
 
 view : Model -> Html Msg

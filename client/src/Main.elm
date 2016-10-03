@@ -27,7 +27,7 @@ type Msg
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    case msg of
+    case Debug.log "Main msg" msg of
         TodosMsg msg' ->
             let
                 ( updatedModel, cmd ) =
@@ -42,7 +42,7 @@ update msg model =
 
                 cmd =
                     case msg' of
-                        NewTodo.SaveTodoDone _ ->
+                        NewTodo.SaveDone _ ->
                             Cmd.map TodosMsg Todos.getTodos
 
                         _ ->
