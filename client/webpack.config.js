@@ -53,6 +53,7 @@ module.exports = {
 	],
 	postcss: function () {
 		return [
+			require('postcss-simple-vars'),
 			require('postcss-modules-local-by-default'),
 			require('postcss-import')({
 				addDependencyTo: webpack,
