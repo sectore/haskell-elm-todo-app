@@ -28,7 +28,6 @@
     "normalize.css": "^4.2.0"
   },
   "devDependencies": {
-    "autoprefixer": "^6.3.7",
     "css-loader": "^0.25.0",
     "elm": "^0.17.1",
     "elm-hot-loader": "^0.3.3",
