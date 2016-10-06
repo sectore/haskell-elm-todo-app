@@ -22,7 +22,7 @@ initialCommand =
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    case Debug.log "Main msg" msg of
+    case msg of
         TodosMsg msg' ->
             let
                 ( updatedModel, cmd ) =
