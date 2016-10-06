@@ -1,78 +1,15 @@
 module Main exposing (..)
 
-import Html exposing (..)
 import Html.App as Html
-import Html.Attributes exposing (..)
-import Todo.NewTodo as NewTodo
-import Todos.Todos as Todos
-
-
-type alias Model =
-    { todos : Todos.Model
-    , newTodo : NewTodo.Model
-    }
-
-
-initialModel : Model
-initialModel =
-    { todos = Todos.initialModel
-    , newTodo = NewTodo.initialModel
-    }
-
-
-type Msg
-    = TodosMsg Todos.Msg
-    | NewTodoMsg NewTodo.Msg
-
-
-update : Msg -> Model -> ( Model, Cmd Msg )
-update msg model =
-    case Debug.log "Main msg" msg of
-        TodosMsg msg' ->
-            let
-                ( updatedModel, cmd ) =
-                    Todos.update msg' model.todos
-            in
-                ( { model | todos = updatedModel }, Cmd.map TodosMsg cmd )
-
-        NewTodoMsg msg' ->
-            let
-                ( newTodoModel, cmd' ) =
-                    NewTodo.update msg' model.newTodo
-
-                cmd =
-                    case msg' of
-                        NewTodo.SaveDone _ ->
-                            Cmd.map TodosMsg Todos.getTodos
-
-                        _ ->
-                            Cmd.map NewTodoMsg cmd'
-            in
-                ( { model | newTodo = newTodoModel }, cmd )
-
-
-view : Model -> Html Msg
-view model =
-    div []
-        [ div
-            [ class "center bg-black bg-cover bg-center header" ]
-            [ div [ class "bg-darken-4 py4" ]
-                [ Html.map NewTodoMsg (NewTodo.view model.newTodo) ]
-            ]
-        , Html.map TodosMsg (Todos.listView model.todos)
-        ]
-
-
-init : ( Model, Cmd Msg )
-init =
-    ( initialModel, Cmd.map TodosMsg Todos.getTodos )
+import App.View as View
+import App.State as State
 
 
 main : Program Never
 main =
     Html.program
-        { init = init
-        , view = view
-        , update = update
-        , subscriptions = \_ -> Sub.none
+        { init = ( State.initialModel, State.initialCommand )
+        , view = View.root
+        , update = State.update
+        , subscriptions = always Sub.none
         }

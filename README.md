@@ -88,7 +88,7 @@ Open [http://localhost:3333](http://localhost:3333).
 
 ## Acknowledge
 
-### Haskell / Servant stuff
+### Helpful Haskell / Servant stuff
 
 - Haskell + Persistent: [http://www.yesodweb.com/book/persistent](http://www.yesodweb.com/book/persistent)
 
@@ -102,6 +102,13 @@ Open [http://localhost:3333](http://localhost:3333).
 
 - "Todobackend" with Servant: [https://github.com/jhedev/todobackend-haskell/tree/master/todobackend-servant](https://github.com/jhedev/todobackend-haskell/tree/master/todobackend-servant)
 
-- Album Haskell Elm app by [Magnus Rundberget](https://github.com/rundis): [https://github.com/rundis/albums](https://github.com/rundis/albums)
+- Album app (Haskell + Elm) by [Magnus Rundberget](https://github.com/rundis): [https://github.com/rundis/albums](https://github.com/rundis/albums)
 
 - DB example of "[5 Ways to Test Application Code that Accesses a Database in Haskell](https://github.com/cdepillabout/testing-code-that-accesses-db-in-haskell/)"
+
+
+### Helpful Elm stuff
+
+- Blog post "[How I Structure Elm Apps](http://blog.jenkster.com/2016/04/how-i-structure-elm-apps.html)" by [Kris Jenkins](https://github.com/krisajenkins)
+
+- [Advanced example](https://github.com/krisajenkins/elm-dialog/tree/master/examples/Advanced) of `elm-dialog` by [Kris Jenkins](https://github.com/krisajenkins)

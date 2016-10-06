@@ -1,3 +1,4 @@
+/* basscss */
 @import 'basscss-basic';
 @import 'basscss-addons/modules/btn';
 @import 'basscss-addons/modules/btn-primary';
@@ -25,5 +26,7 @@
 @import 'basscss-position';
 @import 'basscss-border';
 @import 'basscss-hide';
-@import 'app';
-@import 'Todo/todo';
+/* app */
+@import 'App/styles';
+@import 'Todos/styles';
+@import 'Todo/styles';

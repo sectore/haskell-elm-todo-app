@@ -1,32 +1,13 @@
-module Api exposing (getTodos, saveTodo)
+module Todo.Api exposing (saveTodo)
 
 import Http
 import Json.Decode as Decode exposing (Decoder)
 import Json.Encode as Encode
-import Json.Decode.Pipeline as Pipeline
 import Task
-import Todo.Todo as Todo
+import Todo.Types exposing (..)
 
 
-getTodos : Task.Task Http.Error (List Todo.Model)
-getTodos =
-    Http.get todosDecoder "http://localhost:3000/todos/"
-
-
-todoDecoder : Decoder Todo.Model
-todoDecoder =
-    Pipeline.decode Todo.Model
-        |> Pipeline.required "id" Decode.int
-        |> Pipeline.required "completed" Decode.bool
-        |> Pipeline.required "description" Decode.string
-
-
-todosDecoder : Decoder (List Todo.Model)
-todosDecoder =
-    Decode.list todoDecoder
-
-
-todoEncoded : Todo.Model -> Encode.Value
+todoEncoded : Todo -> Encode.Value
 todoEncoded todo =
     let
         list =
@@ -37,8 +18,8 @@ todoEncoded todo =
         list |> Encode.object
 
 
-saveTodo : Todo.Model -> Task.Task Http.Error Int
-saveTodo todo =
+apiSaveTodo : Todo -> Task.Task Http.Error Int
+apiSaveTodo todo =
     let
         body =
             todoEncoded todo
@@ -54,3 +35,9 @@ saveTodo todo =
     in
         Http.send Http.defaultSettings config
             |> Http.fromJson Decode.int
+
+
+saveTodo : Todo -> Cmd Msg
+saveTodo todo =
+    apiSaveTodo todo
+        |> Task.perform SaveFail SaveDone
