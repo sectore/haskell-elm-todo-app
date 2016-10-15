@@ -1,6 +1,7 @@
 module Todos.State exposing (..)
 
 import Todos.Types exposing (..)
+import Todos.Api exposing (deleteTodo)
 
 
 initialTodos : Todos
@@ -56,6 +57,12 @@ update msg todos =
                 ( todos', Cmd.none )
 
         DeleteTodo todo ->
+            ( todos, deleteTodo todo )
+
+        DeleteTodoDone _ ->
+            ( todos, Cmd.none )
+
+        DeleteTodoFail error ->
             ( todos, Cmd.none )
 
         FetchTodosDone todos ->

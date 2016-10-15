@@ -1,4 +1,4 @@
-module Todos.Api exposing (getTodos)
+module Todos.Api exposing (getTodos, deleteTodo)
 
 import Http
 import Json.Decode as Decode exposing (Decoder)
@@ -6,6 +6,7 @@ import Json.Decode.Pipeline as Pipeline
 import Task
 import Todo.Types as T
 import Todos.Types as Ts
+import Todo.Api as T
 
 
 getTodos : Cmd Ts.Msg
@@ -30,3 +31,9 @@ todoDecoder =
 todosDecoder : Decoder (List T.Todo)
 todosDecoder =
     Decode.list todoDecoder
+
+
+deleteTodo : T.Todo -> Cmd Ts.Msg
+deleteTodo todo =
+    T.apiDeleteTodo todo
+        |> Task.perform Ts.DeleteTodoFail Ts.DeleteTodoDone

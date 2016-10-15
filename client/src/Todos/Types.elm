@@ -21,4 +21,6 @@ type Msg
     | ToggleEditTodo Todo
     | UpdateTodo Todo
     | DeleteTodo Todo
+    | DeleteTodoDone Http.Response
+    | DeleteTodoFail Http.Error
     | NoOp
