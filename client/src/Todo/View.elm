@@ -14,8 +14,14 @@ newTodo model =
         todo' =
             model.todo
 
-        hasInput =
-            not <| String.isEmpty todo'.description
+        hasEmptyDescription =
+            String.isEmpty todo'.description
+
+        extraCancelButtonStyle =
+            if hasEmptyDescription then
+                " muted"
+            else
+                ""
     in
         div [ class "clearfix mt3 mb3" ]
             [ h1 [ class "2 regular caps silver" ]
@@ -34,15 +40,15 @@ newTodo model =
                 [ button
                     [ class "h3 px4 py2 btn btn-outline lime"
                     , onClick Enter
-                    , disabled <| not hasInput
+                    , disabled hasEmptyDescription
                     ]
                     [ text "Add Todo" ]
                 , svg [ class "icon gray", attribute "data-icon" "chevron-right" ] []
                 ]
             , button
-                [ class "btn silver h5 regular underline"
+                [ class <| "btn  h5 regular silver underline" ++ extraCancelButtonStyle
                 , onClick Cancel
-                , disabled hasInput
+                , disabled hasEmptyDescription
                 ]
                 [ text "Or skip" ]
             ]

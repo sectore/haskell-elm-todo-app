@@ -2,3 +2,7 @@
 .header {
   background-image: url('./haskell_elm_logo.png');
 }
+
+button:disabled {
+  cursor: not-allowed;
+}
