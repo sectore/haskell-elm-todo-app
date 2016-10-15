@@ -27,9 +27,7 @@ update msg model =
                 ( { model | todo = { todo' | description = value } }, Cmd.none )
 
         Enter ->
-            ( { model | request = True }
-            , saveTodo model.todo
-            )
+            ( { model | request = True }, saveTodo model.todo )
 
         Cancel ->
             ( { model | todo = emptyTodo }, Cmd.none )
