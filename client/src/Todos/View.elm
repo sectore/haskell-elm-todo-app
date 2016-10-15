@@ -17,6 +17,15 @@ todoView item =
     let
         todo =
             item.todo
+
+        editable =
+            item.editable
+
+        editableInputStyle =
+            if editable then
+                "border-rounded"
+            else
+                "border-none"
     in
         li [ class "flex flex-center h1 p2 border-bottom gray" ]
             [ button
@@ -29,43 +38,44 @@ todoView item =
                     else
                         "Todo"
                 ]
-            , div [ class "flex-auto" ]
-                [ if item.editable then
-                    input
-                        [ class "block h1 col-12 border-rounded black muted"
-                        , type' "text"
-                        , value todo.description
-                        ]
-                        []
-                  else
-                    text todo.description
+            , div
+                [ class "flex-auto"
+                , onClick <|
+                    if not editable then
+                        ToggleEditTodo todo
+                    else
+                        NoOp
+                ]
+                [ input
+                    [ class <| "block h1 col-12 black muted " ++ editableInputStyle
+                    , type' "text"
+                    , disabled <| not editable
+                    , value todo.description
+                    ]
+                    []
+                ]
+            , button
+                [ class "h4 regular btn"
+                , onClick <| ToggleEditTodo todo
+                ]
+                [ text <|
+                    if editable then
+                        "Cancel"
+                    else
+                        "Edit"
                 ]
             , button
                 [ class "h4 regular btn"
                 , onClick <|
-                    if item.editable then
-                        ToggleEditTodo todo
+                    if editable then
+                        UpdateTodo todo
                     else
                         DeleteTodo todo
                 ]
                 [ text <|
-                    if item.editable then
-                        "Cancel"
-                    else
-                        "Delete"
-                ]
-            , button
-                [ class "h4 regular btn"
-                , onClick <|
-                    if item.editable then
-                        UpdateTodo todo
-                    else
-                        ToggleEditTodo todo
-                ]
-                [ text <|
-                    if item.editable then
+                    if editable then
                         "Update"
                     else
-                        "Edit"
+                        "Delete"
                 ]
             ]

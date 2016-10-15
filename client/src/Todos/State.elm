@@ -61,7 +61,7 @@ update msg todos =
         FetchTodosDone todos ->
             let
                 todos' =
-                    List.map (\todo -> TodoItem todo True) todos
+                    List.map (\todo -> TodoItem todo False) todos
             in
                 todos' ! []
 
