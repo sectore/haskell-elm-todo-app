@@ -1,4 +1,4 @@
-module Todo.Api exposing (saveTodo, apiDeleteTodo)
+module Todo.Api exposing (saveTodo, apiDeleteTodo, apiUpdateTodo)
 
 import Http
 import Json.Decode as Decode exposing (Decoder)
@@ -52,6 +52,25 @@ apiDeleteTodo todo =
             , headers = []
             , url = "http://localhost:3000/todo/" ++ toString todo.id
             , body = Http.empty
+            }
+    in
+        Http.send Http.defaultSettings config
+            |> Http.Decorators.interpretStatus
+
+
+apiUpdateTodo : Todo -> Task.Task Http.Error Http.Response
+apiUpdateTodo todo =
+    let
+        body =
+            todoEncoded todo
+                |> Encode.encode 0
+                |> Http.string
+
+        config =
+            { verb = "PUT"
+            , headers = [ ( "Content-Type", "application/json" ) ]
+            , url = "http://localhost:3000/todo/" ++ toString todo.id
+            , body = body
             }
     in
         Http.send Http.defaultSettings config

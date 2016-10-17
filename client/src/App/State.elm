@@ -34,6 +34,9 @@ update msg model =
                         Ts.DeleteTodoDone _ ->
                             Cmd.map TodosMsg Ts.getTodos
 
+                        Ts.UpdateTodoDone _ ->
+                            Cmd.map TodosMsg Ts.getTodos
+
                         _ ->
                             Cmd.map TodosMsg cmd'
             in

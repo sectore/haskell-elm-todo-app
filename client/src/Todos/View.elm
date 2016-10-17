@@ -1,7 +1,7 @@
 module Todos.View exposing (..)
 
 import Html.Attributes exposing (..)
-import Html.Events exposing (onClick)
+import Html.Events exposing (onClick, onInput)
 import Html exposing (..)
 import Todos.Types exposing (..)
 
@@ -30,7 +30,7 @@ todoView item =
         li [ class "flex flex-center h1 p2 border-bottom gray" ]
             [ button
                 [ class "h4 regular italic btn pl0"
-                , onClick <| ToggleDone todo
+                , onClick <| ToggleTodoDone todo
                 ]
                 [ text <|
                     if todo.completed then
@@ -40,23 +40,23 @@ todoView item =
                 ]
             , div
                 [ class "flex-auto"
-                , onClick <|
-                    if not editable then
-                        ToggleEditTodo todo
-                    else
-                        NoOp
                 ]
                 [ input
                     [ class <| "block h1 col-12 black muted " ++ editableInputStyle
                     , type' "text"
                     , disabled <| not editable
-                    , value todo.description
+                    , value <|
+                        if editable then
+                            item.description
+                        else
+                            todo.description
+                    , onInput (UpdateTodoDescription todo)
                     ]
                     []
                 ]
             , button
                 [ class "h4 regular btn"
-                , onClick <| ToggleEditTodo todo
+                , onClick <| ToggleTodoEdit todo
                 ]
                 [ text <|
                     if editable then

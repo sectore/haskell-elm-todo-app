@@ -1,4 +1,4 @@
-module Todos.Api exposing (getTodos, deleteTodo)
+module Todos.Api exposing (getTodos, deleteTodo, updateTodo)
 
 import Http
 import Json.Decode as Decode exposing (Decoder)
@@ -37,3 +37,9 @@ deleteTodo : T.Todo -> Cmd Ts.Msg
 deleteTodo todo =
     T.apiDeleteTodo todo
         |> Task.perform Ts.DeleteTodoFail Ts.DeleteTodoDone
+
+
+updateTodo : T.Todo -> Cmd Ts.Msg
+updateTodo todo =
+    T.apiUpdateTodo todo
+        |> Task.perform Ts.UpdateTodoFail Ts.UpdateTodoDone
