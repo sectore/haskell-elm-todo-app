@@ -1,21 +1,18 @@
 module Todo.View exposing (..)
 
 import Json.Decode as Decode
-import Todo.Types exposing (NewTodo, Msg(..))
+import Todo.Types exposing (Todo, Msg(..))
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onInput, keyCode, on, onClick)
 import String
 
 
-newTodo : NewTodo -> Html Msg
-newTodo model =
+newTodo : Todo -> Html Msg
+newTodo todo =
     let
-        todo' =
-            model.todo
-
         hasEmptyDescription =
-            String.isEmpty todo'.description
+            String.isEmpty todo.description
 
         extraCancelButtonStyle =
             if hasEmptyDescription then
@@ -29,9 +26,9 @@ newTodo model =
             , input
                 [ class "col-10 field h2 p2 mt2 mb2 border-none"
                 , type' "text"
-                , value model.todo.description
+                , value todo.description
                 , placeholder "Enter new Todo"
-                , onInput Input
+                , onInput Update
                 , autofocus True
                 , onKeyDown
                 ]
@@ -39,7 +36,7 @@ newTodo model =
             , div [ class "" ]
                 [ button
                     [ class "h3 px4 py2 btn btn-outline lime"
-                    , onClick Enter
+                    , onClick Save
                     , disabled hasEmptyDescription
                     ]
                     [ text "Add Todo" ]
@@ -60,7 +57,7 @@ onKeyDown =
         keyDecoder keyCode' =
             case keyCode' of
                 13 ->
-                    Enter
+                    Save
 
                 27 ->
                     Cancel
@@ -68,4 +65,4 @@ onKeyDown =
                 _ ->
                     NoOp
     in
-        on "keydown" (Decode.map keyDecoder keyCode)
+        on "keydown" <| Decode.map keyDecoder keyCode

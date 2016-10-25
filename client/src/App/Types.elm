@@ -1,15 +1,15 @@
 module App.Types exposing (..)
 
-import Todos.Types as Ts
-import Todo.Types as T
+import Todos.Types as Todos
+import Todo.Types as Todo
 
 
 type alias Model =
-    { todos : Ts.Todos
-    , newTodo : T.NewTodo
+    { todos : Todos.Todos
+    , newTodo : Todo.Todo
     }
 
 
 type Msg
-    = TodosMsg Ts.Msg
-    | TodoMsg T.Msg
+    = TodosMsg Todos.Msg
+    | TodoMsg Todo.Msg

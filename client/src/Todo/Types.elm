@@ -10,16 +10,14 @@ type alias Todo =
     }
 
 
-type alias NewTodo =
-    { todo : Todo
-    , request : Bool
-    }
-
-
 type Msg
-    = Input String
-    | Enter
-    | Cancel
+    = Update String
+    | Save
     | SaveDone Int
-    | SaveFail Http.Error
+    | SaveFailed Http.Error
+    | DeleteDone Http.Response
+    | DeleteFailed Http.Error
+    | UpdateDone Http.Response
+    | UpdateFailed Http.Error
+    | Cancel
     | NoOp

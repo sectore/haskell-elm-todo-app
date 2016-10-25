@@ -1,4 +1,9 @@
-module Todo.Api exposing (saveTodo, apiDeleteTodo, apiUpdateTodo)
+module Todo.Api
+    exposing
+        ( saveTodo
+        , deleteTodo
+        , updateTodo
+        )
 
 import Http
 import Json.Decode as Decode exposing (Decoder)
@@ -41,7 +46,7 @@ apiSaveTodo todo =
 saveTodo : Todo -> Cmd Msg
 saveTodo todo =
     apiSaveTodo todo
-        |> Task.perform SaveFail SaveDone
+        |> Task.perform SaveFailed SaveDone
 
 
 apiDeleteTodo : Todo -> Task.Task Http.Error Http.Response
@@ -56,6 +61,12 @@ apiDeleteTodo todo =
     in
         Http.send Http.defaultSettings config
             |> Http.Decorators.interpretStatus
+
+
+deleteTodo : Todo -> Cmd Msg
+deleteTodo todo =
+    apiDeleteTodo todo
+        |> Task.perform DeleteFailed DeleteDone
 
 
 apiUpdateTodo : Todo -> Task.Task Http.Error Http.Response
@@ -75,3 +86,9 @@ apiUpdateTodo todo =
     in
         Http.send Http.defaultSettings config
             |> Http.Decorators.interpretStatus
+
+
+updateTodo : Todo -> Cmd Msg
+updateTodo todo =
+    apiUpdateTodo todo
+        |> Task.perform UpdateFailed UpdateDone

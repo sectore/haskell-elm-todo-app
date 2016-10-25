@@ -1,58 +1,96 @@
 module App.State exposing (..)
 
-import Todos.State as Ts
 import App.Types exposing (..)
-import Todos.Api as Ts
-import Todos.Types as Ts
-import Todo.State as T
-import Todo.Types as T
-import Todos.State as Ts
+import Todos.State as Todos
+import Todos.Api as Todos
+import Todos.Types as Todos
+import Todos.State as Todos
+import Todo.State as Todo
+import Todo.Api as Todo
+import Todo.Types as Todo
 
 
 initialModel : Model
 initialModel =
-    { todos = Ts.initialTodos
-    , newTodo = T.initialNewTodo
+    { todos = Todos.initialTodos
+    , newTodo = Todo.initialNewTodo
     }
 
 
 initialCommand : Cmd Msg
 initialCommand =
-    Cmd.map TodosMsg Ts.getTodos
+    Cmd.map TodosMsg Todos.getTodos
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         TodosMsg msg' ->
-            let
-                ( updatedModel, cmd' ) =
-                    Ts.update msg' model.todos
-
-                cmd =
-                    case msg' of
-                        Ts.DeleteTodoDone _ ->
-                            Cmd.map TodosMsg Ts.getTodos
-
-                        Ts.UpdateTodoDone _ ->
-                            Cmd.map TodosMsg Ts.getTodos
-
-                        _ ->
-                            Cmd.map TodosMsg cmd'
-            in
-                ( { model | todos = updatedModel }, cmd )
+            updateTodos msg' model
 
         TodoMsg msg' ->
-            let
-                ( newTodoModel, cmd' ) =
-                    T.update msg' model.newTodo
+            updateTodo msg' model
 
-                cmd =
-                    case msg' of
-                        T.SaveDone _ ->
-                            Cmd.map TodosMsg Ts.getTodos
 
-                        _ ->
-                            Cmd.map TodoMsg cmd'
-            in
-                ( { model | newTodo = newTodoModel }, cmd )
+updateTodos : Todos.Msg -> Model -> ( Model, Cmd Msg )
+updateTodos msg model =
+    let
+        ( todos, cmd ) =
+            Todos.update msg model.todos
+
+        ( todos', cmd' ) =
+            case msg of
+                Todos.FetchTodosDone todos'' ->
+                    ( List.map Todos.createTodoItem todos''
+                    , Cmd.none
+                    )
+
+                Todos.FetchTodosFail error ->
+                    ( todos, Cmd.none )
+
+                Todos.DeleteTodo todo ->
+                    ( Todos.deleteTodoItem todo todos
+                    , Cmd.map TodoMsg <| Todo.deleteTodo todo
+                    )
+
+                Todos.UpdateTodo todo ->
+                    case Todos.getTodoItem todo todos of
+                        Nothing ->
+                            ( todos, Cmd.none )
+
+                        Just todoItem ->
+                            ( todos, Cmd.map TodoMsg <| Todo.updateTodo todoItem.todo )
+
+                Todos.ToggleTodoDone todo ->
+                    let
+                        todo' =
+                            { todo | completed = not todo.completed }
+
+                        todos' =
+                            Todos.updateTodoItem todo' todos
+                    in
+                        ( todos', Cmd.map TodoMsg <| Todo.updateTodo todo' )
+
+                _ ->
+                    ( todos, Cmd.map TodosMsg cmd )
+    in
+        ( { model | todos = todos' }, cmd' )
+
+
+updateTodo : Todo.Msg -> Model -> ( Model, Cmd Msg )
+updateTodo msg model =
+    let
+        ( todo, cmd ) =
+            Todo.update msg model.newTodo
+    in
+        case msg of
+            Todo.Save ->
+                ( { model
+                    | todos = List.append model.todos [ Todos.createTodoItem todo ]
+                    , newTodo = Todo.emptyTodo
+                  }
+                , Cmd.map TodoMsg <| Todo.saveTodo todo
+                )
+
+            _ ->
+                ( { model | newTodo = todo }, Cmd.map TodoMsg cmd )

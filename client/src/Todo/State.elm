@@ -1,6 +1,5 @@
 module Todo.State exposing (..)
 
-import Todo.Api exposing (saveTodo)
 import Todo.Types exposing (..)
 
 
@@ -9,39 +8,25 @@ emptyTodo =
     Todo -1 False ""
 
 
-initialNewTodo : NewTodo
+initialNewTodo : Todo
 initialNewTodo =
-    { todo = emptyTodo
-    , request = False
-    }
+    emptyTodo
 
 
-update : Msg -> NewTodo -> ( NewTodo, Cmd Msg )
-update msg model =
+update : Msg -> Todo -> ( Todo, Cmd Msg )
+update msg todo =
     case msg of
-        Input value ->
-            let
-                todo' =
-                    model.todo
-            in
-                ( { model | todo = { todo' | description = value } }, Cmd.none )
+        Update value ->
+            ( { todo | description = value }, Cmd.none )
 
-        Enter ->
-            ( { model | request = True }, saveTodo model.todo )
+        Save ->
+            ( todo, Cmd.none )
 
         Cancel ->
-            ( { model | todo = emptyTodo }, Cmd.none )
-
-        SaveDone id' ->
-            ( { model
-                | request = False
-                , todo = emptyTodo
-              }
-            , Cmd.none
-            )
-
-        SaveFail error ->
-            ( { model | request = False }, Cmd.none )
+            ( emptyTodo, Cmd.none )
 
         NoOp ->
-            ( model, Cmd.none )
+            ( todo, Cmd.none )
+
+        _ ->
+            ( todo, Cmd.none )

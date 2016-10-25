@@ -9,11 +9,11 @@ import Todos.Types exposing (..)
 listView : Todos -> Html Msg
 listView todos =
     ul [ class "list-reset m0" ]
-        (List.map todoView todos)
+        (List.map itemView todos)
 
 
-todoView : TodoItem -> Html Msg
-todoView item =
+itemView : TodoItem -> Html Msg
+itemView item =
     let
         todo =
             item.todo
