@@ -22,26 +22,26 @@
   },
   "homepage": "https://github.com/sectore/haskell-elm-todo-app#readme",
   "dependencies": {
-    "basscss": "^8.0.2",
+    "basscss": "^8.0.3",
     "basscss-addons": "^1.0.0",
     "basscss-basic": "^1.0.0",
-    "normalize.css": "^4.2.0"
+    "normalize.css": "^5.0.0"
   },
   "devDependencies": {
     "css-loader": "^0.25.0",
     "elm": "^0.17.1",
-    "elm-hot-loader": "^0.3.3",
-    "elm-webpack-loader": "^3.0.3",
+    "elm-hot-loader": "^0.3.4",
+    "elm-webpack-loader": "^3.0.6",
     "file-loader": "^0.9.0",
-    "html-webpack-plugin": "^2.22.0",
+    "html-webpack-plugin": "^2.24.0",
     "postcss-cssnext": "^2.8.0",
     "postcss-import": "^8.1.2",
-    "postcss-loader": "^0.13.0",
+    "postcss-loader": "^1.0.0",
     "postcss-modules-local-by-default": "^1.1.1",
     "precss": "^1.4.0",
     "style-loader": "^0.13.1",
     "url-loader": "^0.5.7",
-    "webpack": "^1.13.1",
-    "webpack-dev-server": "^1.14.1"
+    "webpack": "^1.13.2",
+    "webpack-dev-server": "^1.16.2"
   }
 }
