@@ -48,28 +48,31 @@ updateTodos msg model =
                 Todos.FetchTodosFail error ->
                     ( todos, Cmd.none )
 
-                Todos.DeleteTodo todo ->
-                    ( Todos.deleteTodoItem todo todos
-                    , Cmd.map TodoMsg <| Todo.deleteTodo todo
+                Todos.DeleteTodo todoItem ->
+                    ( Todos.deleteTodoItem todoItem todos
+                    , Cmd.map TodoMsg <| Todo.deleteTodo todoItem.todo
                     )
 
-                Todos.UpdateTodo todo ->
-                    case Todos.getTodoItem todo todos of
+                Todos.SaveTodo todoItem ->
+                    -- get a fresh todoItem again, which is just updated by sub module before
+                    case Todos.getTodoItem todoItem todos of
+                        Just todoItem' ->
+                            ( todos, Cmd.map TodoMsg <| Todo.updateTodo todoItem'.todo )
+
                         Nothing ->
                             ( todos, Cmd.none )
 
-                        Just todoItem ->
-                            ( todos, Cmd.map TodoMsg <| Todo.updateTodo todoItem.todo )
-
-                Todos.ToggleTodoDone todo ->
+                Todos.ToggleTodoDone todoItem ->
                     let
+                        todo =
+                            todoItem.todo
+
                         todo' =
                             { todo | completed = not todo.completed }
-
-                        todos' =
-                            Todos.updateTodoItem todo' todos
                     in
-                        ( todos', Cmd.map TodoMsg <| Todo.updateTodo todo' )
+                        ( Todos.updateTodo todo' todos
+                        , Cmd.map TodoMsg <| Todo.updateTodo todo'
+                        )
 
                 _ ->
                     ( todos, Cmd.map TodosMsg cmd )

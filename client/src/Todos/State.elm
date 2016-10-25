@@ -12,21 +12,52 @@ initialTodos =
 update : Msg -> Todos -> ( Todos, Cmd Msg )
 update msg todos =
     case msg of
-        ToggleTodoEdit todo ->
-            ( toggleEditable todo todos, Cmd.none )
+        EditTodo todoItem ->
+            let
+                todoItem' =
+                    { todoItem
+                        | editable = True
+                        , description = todoItem.todo.description
+                    }
+            in
+                ( updateTodoItem todoItem' todos, Cmd.none )
 
-        UpdateTodo todo ->
-            ( toggleEditable todo todos, Cmd.none )
+        CancelEditTodo todoItem ->
+            let
+                todoItem' =
+                    { todoItem
+                        | editable = False
+                        , description = ""
+                    }
+            in
+                ( updateTodoItem todoItem' todos, Cmd.none )
 
-        UpdateTodoDescription todo description ->
+        SaveTodo todoItem ->
+            let
+                todo' =
+                    todoItem.todo
+
+                description =
+                    todoItem.description
+
+                todoItem' =
+                    { todoItem
+                        | editable = False
+                        , description = ""
+                        , todo = { todo' | description = description }
+                    }
+            in
+                ( updateTodoItem todoItem' todos, Cmd.none )
+
+        UpdateDescription todoItem description ->
             let
                 todos' =
                     List.map
-                        (\todoItem ->
-                            if todoItem.todo == todo then
+                        (\todoItem' ->
+                            if todoItem' == todoItem then
                                 { todoItem | description = description }
                             else
-                                todoItem
+                                todoItem'
                         )
                         todos
             in
@@ -40,49 +71,18 @@ update msg todos =
 -- state helper functions
 
 
-toggleEditable : Todo.Todo -> Todos -> Todos
-toggleEditable todo =
-    List.map
-        (\todoItem ->
-            if todoItem.todo == todo then
-                let
-                    editable =
-                        not todoItem.editable
-
-                    itemDescription =
-                        if editable then
-                            todo.description
-                        else
-                            ""
-
-                    todoDescription =
-                        if editable then
-                            todo.description
-                        else
-                            todoItem.description
-                in
-                    { todoItem
-                        | editable = editable
-                        , description = itemDescription
-                        , todo = { todo | description = todoDescription }
-                    }
-            else
-                todoItem
-        )
-
-
 createTodoItem : Todo.Todo -> TodoItem
 createTodoItem todo =
     TodoItem todo "" False
 
 
-deleteTodoItem : Todo.Todo -> Todos -> Todos
-deleteTodoItem todo todos =
-    List.filter (\todoItem -> todoItem.todo /= todo) todos
+deleteTodoItem : TodoItem -> Todos -> Todos
+deleteTodoItem todoItem =
+    List.filter (\todoItem' -> todoItem /= todoItem')
 
 
-updateTodoItem : Todo.Todo -> Todos -> Todos
-updateTodoItem todo =
+updateTodo : Todo.Todo -> Todos -> Todos
+updateTodo todo =
     List.map
         (\todo' ->
             if todo'.todo.id == todo.id then
@@ -92,18 +92,29 @@ updateTodoItem todo =
         )
 
 
-getTodoItem : Todo.Todo -> Todos -> Maybe TodoItem
-getTodoItem todo todos =
+updateTodoItem : TodoItem -> Todos -> Todos
+updateTodoItem todoItem =
+    List.map
+        (\todoItem' ->
+            if todoItem'.todo.id == todoItem.todo.id then
+                todoItem
+            else
+                todoItem'
+        )
+
+
+getTodoItem : TodoItem -> Todos -> Maybe TodoItem
+getTodoItem todoItem todos =
     List.head <|
         List.filter
-            (\todoItem ->
-                todoItem.todo.id == todo.id
+            (\todoItem' ->
+                todoItem'.todo.id == todoItem.todo.id
             )
             todos
 
 
 toggleTodoDone : Todo.Todo -> Todos -> Todos
-toggleTodoDone todo todos =
+toggleTodoDone todo =
     List.map
         (\todoItem ->
             if todoItem.todo == todo then
@@ -111,4 +122,3 @@ toggleTodoDone todo todos =
             else
                 todoItem
         )
-        todos

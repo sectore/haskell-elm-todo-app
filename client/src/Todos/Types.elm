@@ -16,10 +16,11 @@ type alias Todos =
 
 
 type Msg
-    = ToggleTodoDone Todo.Todo
-    | ToggleTodoEdit Todo.Todo
-    | UpdateTodoDescription Todo.Todo String
-    | UpdateTodo Todo.Todo
-    | DeleteTodo Todo.Todo
+    = ToggleTodoDone TodoItem
+    | EditTodo TodoItem
+    | CancelEditTodo TodoItem
+    | UpdateDescription TodoItem String
+    | SaveTodo TodoItem
+    | DeleteTodo TodoItem
     | FetchTodosFail Http.Error
     | FetchTodosDone (List Todo.Todo)

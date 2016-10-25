@@ -30,7 +30,7 @@ itemView item =
         li [ class "flex flex-center h1 p2 border-bottom gray" ]
             [ button
                 [ class "h4 regular italic btn pl0"
-                , onClick <| ToggleTodoDone todo
+                , onClick <| ToggleTodoDone item
                 ]
                 [ text <|
                     if todo.completed then
@@ -50,13 +50,17 @@ itemView item =
                             item.description
                         else
                             todo.description
-                    , onInput (UpdateTodoDescription todo)
+                    , onInput (UpdateDescription item)
                     ]
                     []
                 ]
             , button
                 [ class "h4 regular btn"
-                , onClick <| ToggleTodoEdit todo
+                , onClick <|
+                    if editable then
+                        CancelEditTodo item
+                    else
+                        EditTodo item
                 ]
                 [ text <|
                     if editable then
@@ -68,9 +72,9 @@ itemView item =
                 [ class "h4 regular btn"
                 , onClick <|
                     if editable then
-                        UpdateTodo todo
+                        SaveTodo item
                     else
-                        DeleteTodo todo
+                        DeleteTodo item
                 ]
                 [ text <|
                     if editable then
