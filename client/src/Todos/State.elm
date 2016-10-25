@@ -51,17 +51,10 @@ update msg todos =
 
         UpdateDescription todoItem description ->
             let
-                todos' =
-                    List.map
-                        (\todoItem' ->
-                            if todoItem' == todoItem then
-                                { todoItem | description = description }
-                            else
-                                todoItem'
-                        )
-                        todos
+                todoItem' =
+                    { todoItem | description = description }
             in
-                ( todos', Cmd.none )
+                ( updateTodoItem todoItem' todos, Cmd.none )
 
         _ ->
             ( todos, Cmd.none )
@@ -111,14 +104,3 @@ getTodoItem todoItem todos =
                 todoItem'.todo.id == todoItem.todo.id
             )
             todos
-
-
-toggleTodoDone : Todo.Todo -> Todos -> Todos
-toggleTodoDone todo =
-    List.map
-        (\todoItem ->
-            if todoItem.todo == todo then
-                { todoItem | todo = { todo | completed = not todo.completed } }
-            else
-                todoItem
-        )
