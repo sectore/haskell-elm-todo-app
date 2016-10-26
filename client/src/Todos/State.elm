@@ -1,5 +1,6 @@
 module Todos.State exposing (..)
 
+import Return exposing (Return)
 import Todos.Types exposing (..)
 import Todo.Types as Todo
 
@@ -9,55 +10,59 @@ initialTodos =
     []
 
 
-update : Msg -> Todos -> ( Todos, Cmd Msg )
+update : Msg -> Todos -> Return Msg Todos
 update msg todos =
-    case msg of
-        EditTodo todoItem ->
-            let
-                todoItem' =
-                    { todoItem
-                        | editable = True
-                        , description = todoItem.todo.description
-                    }
-            in
-                ( updateTodoItem todoItem' todos, Cmd.none )
+    Return.singleton todos
+        |> case msg of
+            EditTodo todoItem ->
+                let
+                    todo =
+                        todoItem.todo
 
-        CancelEditTodo todoItem ->
-            let
-                todoItem' =
-                    { todoItem
-                        | editable = False
-                        , description = ""
-                    }
-            in
-                ( updateTodoItem todoItem' todos, Cmd.none )
+                    todoItem' =
+                        { todoItem
+                            | editable = True
+                            , description = todo.description
+                        }
+                in
+                    Return.map (\todos' -> updateTodoItem todoItem' todos')
 
-        SaveTodo todoItem ->
-            let
-                todo' =
-                    todoItem.todo
+            CancelEditTodo todoItem ->
+                let
+                    todoItem' =
+                        { todoItem
+                            | editable = False
+                            , description = ""
+                        }
+                in
+                    Return.map (\todos' -> updateTodoItem todoItem' todos')
 
-                description =
-                    todoItem.description
+            SaveTodo todoItem ->
+                let
+                    todo' =
+                        todoItem.todo
 
-                todoItem' =
-                    { todoItem
-                        | editable = False
-                        , description = ""
-                        , todo = { todo' | description = description }
-                    }
-            in
-                ( updateTodoItem todoItem' todos, Cmd.none )
+                    description =
+                        todoItem.description
 
-        UpdateDescription todoItem description ->
-            let
-                todoItem' =
-                    { todoItem | description = description }
-            in
-                ( updateTodoItem todoItem' todos, Cmd.none )
+                    todoItem' =
+                        { todoItem
+                            | editable = False
+                            , description = ""
+                            , todo = { todo' | description = description }
+                        }
+                in
+                    Return.map (\todos' -> updateTodoItem todoItem' todos')
 
-        _ ->
-            ( todos, Cmd.none )
+            UpdateDescription todoItem description ->
+                let
+                    todoItem' =
+                        { todoItem | description = description }
+                in
+                    Return.map (\todos' -> updateTodoItem todoItem' todos')
+
+            _ ->
+                Return.zero
 
 
 

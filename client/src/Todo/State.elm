@@ -1,6 +1,7 @@
 module Todo.State exposing (..)
 
 import Todo.Types exposing (..)
+import Return exposing (Return)
 
 
 emptyTodo : Todo
@@ -13,20 +14,15 @@ initialNewTodo =
     emptyTodo
 
 
-update : Msg -> Todo -> ( Todo, Cmd Msg )
+update : Msg -> Todo -> Return Msg Todo
 update msg todo =
-    case msg of
-        Update value ->
-            ( { todo | description = value }, Cmd.none )
+    Return.singleton todo
+        |> case msg of
+            Update value ->
+                Return.map (\todo' -> { todo' | description = value })
 
-        Save ->
-            ( todo, Cmd.none )
+            Cancel ->
+                Return.map <| always emptyTodo
 
-        Cancel ->
-            ( emptyTodo, Cmd.none )
-
-        NoOp ->
-            ( todo, Cmd.none )
-
-        _ ->
-            ( todo, Cmd.none )
+            _ ->
+                Return.zero

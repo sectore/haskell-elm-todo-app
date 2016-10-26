@@ -8,6 +8,7 @@ import Todos.State as Todos
 import Todo.State as Todo
 import Todo.Api as Todo
 import Todo.Types as Todo
+import Return exposing (Return)
 
 
 initialModel : Model
@@ -22,45 +23,80 @@ initialCommand =
     Cmd.map TodosMsg Todos.getTodos
 
 
-update : Msg -> Model -> ( Model, Cmd Msg )
+update : Msg -> Model -> Return Msg Model
 update msg model =
-    case msg of
-        TodosMsg msg' ->
-            updateTodos msg' model
+    Return.singleton model
+        |> case msg of
+            TodosMsg msg' ->
+                updateTodos msg'
 
-        TodoMsg msg' ->
-            updateTodo msg' model
+            TodoMsg msg' ->
+                updateTodo msg'
 
 
-updateTodos : Todos.Msg -> Model -> ( Model, Cmd Msg )
-updateTodos msg model =
+updateTodo : Todo.Msg -> Return Msg Model -> Return Msg Model
+updateTodo msg writer =
     let
-        ( todos, cmd ) =
-            Todos.update msg model.todos
+        ( appModel, _ ) =
+            writer
 
-        ( todos', cmd' ) =
-            case msg of
-                Todos.FetchTodosDone todos'' ->
-                    ( List.map Todos.createTodoItem todos''
-                    , Cmd.none
-                    )
+        ( todoModel, todoCmd ) =
+            Todo.update msg appModel.newTodo
+    in
+        writer
+            |> case msg of
+                Todo.Save ->
+                    let
+                        todos =
+                            List.append appModel.todos [ Todos.createTodoItem todoModel ]
 
-                Todos.FetchTodosFail error ->
-                    ( todos, Cmd.none )
+                        cmd' =
+                            Cmd.map TodoMsg <| Todo.saveTodo todoModel
+                    in
+                        Return.mapWith
+                            (\m -> { m | todos = todos, newTodo = Todo.emptyTodo })
+                            cmd'
+
+                _ ->
+                    Return.mapWith (\m -> { m | newTodo = todoModel }) (Cmd.map TodoMsg todoCmd)
+
+
+updateTodos : Todos.Msg -> Return Msg Model -> Return Msg Model
+updateTodos msg writer =
+    let
+        ( appModel, _ ) =
+            writer
+
+        ( todosModel, todosCmd ) =
+            Todos.update msg appModel.todos
+    in
+        writer
+            |> case msg of
+                Todos.FetchTodosDone todos ->
+                    let
+                        todos' =
+                            List.map Todos.createTodoItem todos
+                    in
+                        Return.map (\m -> { m | todos = todos' })
 
                 Todos.DeleteTodo todoItem ->
-                    ( Todos.deleteTodoItem todoItem todos
-                    , Cmd.map TodoMsg <| Todo.deleteTodo todoItem.todo
-                    )
+                    let
+                        todos' =
+                            Todos.deleteTodoItem todoItem todosModel
+
+                        todoCmd =
+                            Cmd.map TodoMsg <| (Todo.deleteTodo todoItem.todo)
+                    in
+                        Return.mapWith (\m -> { m | todos = todos' }) todoCmd
 
                 Todos.SaveTodo todoItem ->
                     -- get a fresh todoItem again, which is just updated by sub module before
-                    case Todos.getTodoItem todoItem todos of
+                    case Todos.getTodoItem todoItem todosModel of
                         Just todoItem' ->
-                            ( todos, Cmd.map TodoMsg <| Todo.updateTodo todoItem'.todo )
+                            Return.mapWith (\m -> { m | todos = todosModel }) (Cmd.map TodoMsg <| Todo.updateTodo todoItem'.todo)
 
                         Nothing ->
-                            ( todos, Cmd.none )
+                            Return.zero
 
                 Todos.ToggleTodoDone todoItem ->
                     let
@@ -69,31 +105,14 @@ updateTodos msg model =
 
                         todo' =
                             { todo | completed = not todo.completed }
+
+                        todos' =
+                            Todos.updateTodo todo' todosModel
+
+                        todoCmd =
+                            Cmd.map TodoMsg <| Todo.updateTodo todo'
                     in
-                        ( Todos.updateTodo todo' todos
-                        , Cmd.map TodoMsg <| Todo.updateTodo todo'
-                        )
+                        Return.mapWith (\m -> { m | todos = todos' }) todoCmd
 
                 _ ->
-                    ( todos, Cmd.map TodosMsg cmd )
-    in
-        ( { model | todos = todos' }, cmd' )
-
-
-updateTodo : Todo.Msg -> Model -> ( Model, Cmd Msg )
-updateTodo msg model =
-    let
-        ( todo, cmd ) =
-            Todo.update msg model.newTodo
-    in
-        case msg of
-            Todo.Save ->
-                ( { model
-                    | todos = List.append model.todos [ Todos.createTodoItem todo ]
-                    , newTodo = Todo.emptyTodo
-                  }
-                , Cmd.map TodoMsg <| Todo.saveTodo todo
-                )
-
-            _ ->
-                ( { model | newTodo = todo }, Cmd.map TodoMsg cmd )
+                    Return.mapWith (\m -> { m | todos = todosModel }) (Cmd.map TodosMsg todosCmd)
