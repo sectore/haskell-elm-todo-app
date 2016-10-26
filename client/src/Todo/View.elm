@@ -2,6 +2,7 @@ module Todo.View exposing (..)
 
 import Json.Decode as Decode
 import Todo.Types exposing (Todo, Msg(..))
+import Todo.State exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onInput, keyCode, on, onClick)
@@ -11,14 +12,9 @@ import String
 newTodo : Todo -> Html Msg
 newTodo todo =
     let
-        hasEmptyDescription =
-            String.isEmpty todo.description
-
-        extraCancelButtonStyle =
-            if hasEmptyDescription then
-                " muted"
-            else
-                ""
+        hasEmptyDescription : Todo -> Bool
+        hasEmptyDescription todo =
+            String.isEmpty <| descriptionL.get todo
     in
         div [ class "clearfix mt3 mb3" ]
             [ h1 [ class "2 regular caps silver" ]
@@ -37,15 +33,20 @@ newTodo todo =
                 [ button
                     [ class "h3 px4 py2 btn btn-outline lime"
                     , onClick Save
-                    , disabled hasEmptyDescription
+                    , disabled <| hasEmptyDescription todo
                     ]
                     [ text "Add Todo" ]
                 , svg [ class "icon gray", attribute "data-icon" "chevron-right" ] []
                 ]
             , button
-                [ class <| "btn  h5 regular silver underline" ++ extraCancelButtonStyle
+                [ class <|
+                    "btn  h5 regular silver underline"
+                        ++ if hasEmptyDescription todo then
+                            " muted"
+                           else
+                            ""
                 , onClick Cancel
-                , disabled hasEmptyDescription
+                , disabled <| hasEmptyDescription todo
                 ]
                 [ text "Or skip" ]
             ]

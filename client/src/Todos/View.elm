@@ -4,6 +4,7 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, onInput)
 import Html exposing (..)
 import Todos.Types exposing (..)
+import Todos.State exposing (..)
 
 
 listView : Todos -> Html Msg
@@ -15,11 +16,8 @@ listView todos =
 itemView : TodoItem -> Html Msg
 itemView item =
     let
-        todo =
-            item.todo
-
         editable =
-            item.editable
+            itemEditableL.get item
 
         editableInputStyle =
             if editable then
@@ -33,7 +31,7 @@ itemView item =
                 , onClick <| ToggleTodoDone item
                 ]
                 [ text <|
-                    if todo.completed then
+                    if todoCompletedL.get item then
                         "Done "
                     else
                         "Todo"
@@ -45,11 +43,13 @@ itemView item =
                     [ class <| "block h1 col-12 black muted " ++ editableInputStyle
                     , type' "text"
                     , disabled <| not editable
-                    , value <|
-                        if editable then
-                            item.description
-                        else
-                            todo.description
+                    , value
+                        (item
+                            |> if editable then
+                                .get itemDescriptionL
+                               else
+                                .get todoDescriptionL
+                        )
                     , onInput (UpdateDescription item)
                     ]
                     []

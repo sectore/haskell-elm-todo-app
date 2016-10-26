@@ -1,5 +1,6 @@
 module App.State exposing (..)
 
+import Monocle.Lens exposing (Lens)
 import App.Types exposing (..)
 import Todos.State as Todos
 import Todos.Api as Todos
@@ -11,6 +12,9 @@ import Todo.Types as Todo
 import Return exposing (Return)
 
 
+-- Model
+
+
 initialModel : Model
 initialModel =
     { todos = Todos.initialTodos
@@ -18,9 +22,31 @@ initialModel =
     }
 
 
+
+-- Lens
+
+
+todosL : Lens Model Todos.Todos
+todosL =
+    Lens .todos (\x m -> { m | todos = x })
+
+
+newTodoL : Lens Model Todo.Todo
+newTodoL =
+    Lens .newTodo (\x m -> { m | newTodo = x })
+
+
+
+-- Cmd
+
+
 initialCommand : Cmd Msg
 initialCommand =
     Cmd.map TodosMsg Todos.getTodos
+
+
+
+-- update
 
 
 update : Msg -> Model -> Return Msg Model
@@ -51,10 +77,10 @@ updateTodo msg writer =
                             List.append appModel.todos [ Todos.createTodoItem todoModel ]
                     in
                         Return.mapWith
-                            (\m -> { m | todos = todos, newTodo = Todo.emptyTodo })
-                        <|
-                            Cmd.map TodoMsg <|
+                            (\m -> m |> .set todosL todos |> .set newTodoL Todo.emptyTodo)
+                            (Cmd.map TodoMsg <|
                                 Todo.saveTodo todoModel
+                            )
 
                 _ ->
                     Return.mapWith (\m -> { m | newTodo = todoModel }) <|
@@ -73,28 +99,29 @@ updateTodos msg writer =
         writer
             |> case msg of
                 Todos.FetchTodosDone todos ->
-                    let
-                        todos' =
+                    Return.map <|
+                        .set todosL <|
                             List.map Todos.createTodoItem todos
-                    in
-                        Return.map (\m -> { m | todos = todos' })
 
                 Todos.DeleteTodo todoItem ->
-                    let
-                        todos' =
+                    Return.mapWith
+                        (.set todosL <|
                             Todos.deleteTodoItem todoItem todosModel
-                    in
-                        Return.mapWith (\m -> { m | todos = todos' }) <|
-                            Cmd.map TodoMsg <|
-                                Todo.deleteTodo todoItem.todo
+                        )
+                        (Cmd.map TodoMsg <|
+                            Todo.deleteTodo todoItem.todo
+                        )
 
                 Todos.SaveTodo todoItem ->
-                    -- get a fresh todoItem again, which is just updated by sub module before
+                    -- FIXME: get a fresh todoItem again, which is just updated by sub module before
                     case Todos.getTodoItem todoItem todosModel of
                         Just todoItem' ->
-                            Return.mapWith (\m -> { m | todos = todosModel }) <|
-                                Cmd.map TodoMsg <|
-                                    Todo.updateTodo todoItem'.todo
+                            Return.mapWith
+                                (.set todosL todosModel)
+                                (Cmd.map TodoMsg <|
+                                    Todo.updateTodo <|
+                                        .get Todos.itemTodoL todoItem'
+                                )
 
                         Nothing ->
                             Return.zero
@@ -106,14 +133,14 @@ updateTodos msg writer =
 
                         todo' =
                             { todo | completed = not todo.completed }
-
-                        todos' =
-                            Todos.updateTodo todo' todosModel
                     in
-                        Return.mapWith (\m -> { m | todos = todos' }) <|
-                            Cmd.map TodoMsg <|
+                        Return.mapWith
+                            (.set todosL <| Todos.updateTodo todo' todosModel)
+                            (Cmd.map TodoMsg <|
                                 Todo.updateTodo todo'
+                            )
 
                 _ ->
-                    Return.mapWith (\m -> { m | todos = todosModel }) <|
-                        Cmd.map TodosMsg todosCmd
+                    Return.mapWith
+                        (.set todosL todosModel)
+                        (Cmd.map TodosMsg todosCmd)
