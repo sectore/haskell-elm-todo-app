@@ -25,7 +25,7 @@ update msg todos =
                             , description = todo.description
                         }
                 in
-                    Return.map (\todos' -> updateTodoItem todoItem' todos')
+                    Return.map <| updateTodoItem todoItem'
 
             CancelEditTodo todoItem ->
                 let
@@ -35,7 +35,7 @@ update msg todos =
                             , description = ""
                         }
                 in
-                    Return.map (\todos' -> updateTodoItem todoItem' todos')
+                    Return.map <| updateTodoItem todoItem'
 
             SaveTodo todoItem ->
                 let
@@ -52,14 +52,14 @@ update msg todos =
                             , todo = { todo' | description = description }
                         }
                 in
-                    Return.map (\todos' -> updateTodoItem todoItem' todos')
+                    Return.map <| updateTodoItem todoItem'
 
             UpdateDescription todoItem description ->
                 let
                     todoItem' =
                         { todoItem | description = description }
                 in
-                    Return.map (\todos' -> updateTodoItem todoItem' todos')
+                    Return.map <| updateTodoItem todoItem'
 
             _ ->
                 Return.zero
@@ -76,7 +76,7 @@ createTodoItem todo =
 
 deleteTodoItem : TodoItem -> Todos -> Todos
 deleteTodoItem todoItem =
-    List.filter (\todoItem' -> todoItem /= todoItem')
+    List.filter <| (/=) todoItem
 
 
 updateTodo : Todo.Todo -> Todos -> Todos

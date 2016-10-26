@@ -49,16 +49,16 @@ updateTodo msg writer =
                     let
                         todos =
                             List.append appModel.todos [ Todos.createTodoItem todoModel ]
-
-                        cmd' =
-                            Cmd.map TodoMsg <| Todo.saveTodo todoModel
                     in
                         Return.mapWith
                             (\m -> { m | todos = todos, newTodo = Todo.emptyTodo })
-                            cmd'
+                        <|
+                            Cmd.map TodoMsg <|
+                                Todo.saveTodo todoModel
 
                 _ ->
-                    Return.mapWith (\m -> { m | newTodo = todoModel }) (Cmd.map TodoMsg todoCmd)
+                    Return.mapWith (\m -> { m | newTodo = todoModel }) <|
+                        Cmd.map TodoMsg todoCmd
 
 
 updateTodos : Todos.Msg -> Return Msg Model -> Return Msg Model
@@ -83,17 +83,18 @@ updateTodos msg writer =
                     let
                         todos' =
                             Todos.deleteTodoItem todoItem todosModel
-
-                        todoCmd =
-                            Cmd.map TodoMsg <| (Todo.deleteTodo todoItem.todo)
                     in
-                        Return.mapWith (\m -> { m | todos = todos' }) todoCmd
+                        Return.mapWith (\m -> { m | todos = todos' }) <|
+                            Cmd.map TodoMsg <|
+                                Todo.deleteTodo todoItem.todo
 
                 Todos.SaveTodo todoItem ->
                     -- get a fresh todoItem again, which is just updated by sub module before
                     case Todos.getTodoItem todoItem todosModel of
                         Just todoItem' ->
-                            Return.mapWith (\m -> { m | todos = todosModel }) (Cmd.map TodoMsg <| Todo.updateTodo todoItem'.todo)
+                            Return.mapWith (\m -> { m | todos = todosModel }) <|
+                                Cmd.map TodoMsg <|
+                                    Todo.updateTodo todoItem'.todo
 
                         Nothing ->
                             Return.zero
@@ -108,11 +109,11 @@ updateTodos msg writer =
 
                         todos' =
                             Todos.updateTodo todo' todosModel
-
-                        todoCmd =
-                            Cmd.map TodoMsg <| Todo.updateTodo todo'
                     in
-                        Return.mapWith (\m -> { m | todos = todos' }) todoCmd
+                        Return.mapWith (\m -> { m | todos = todos' }) <|
+                            Cmd.map TodoMsg <|
+                                Todo.updateTodo todo'
 
                 _ ->
-                    Return.mapWith (\m -> { m | todos = todosModel }) (Cmd.map TodosMsg todosCmd)
+                    Return.mapWith (\m -> { m | todos = todosModel }) <|
+                        Cmd.map TodosMsg todosCmd
