@@ -18,29 +18,35 @@ itemView item =
     let
         editable =
             itemEditableL.get item
-
-        editableInputStyle =
-            if editable then
-                "border-rounded"
-            else
-                "border-none"
     in
-        li [ class "flex flex-center h1 p2 border-bottom gray" ]
-            [ button
-                [ class "h4 regular italic btn pl0"
-                , onClick <| ToggleTodoDone item
-                ]
-                [ text <|
-                    if todoCompletedL.get item then
-                        "Done "
-                    else
-                        "Todo"
+        li [ class "flex flex-center p2 border-bottom silver" ]
+            [ div [ class "pr2" ]
+                [ button
+                    [ class <|
+                        "h6 regular italic btn m0 p0 pl1 pr1 white rounded"
+                            ++ if todoCompletedL.get item then
+                                " bg-green "
+                               else
+                                " bg-gray"
+                    , onClick <| ToggleTodoDone item
+                    ]
+                    [ text <|
+                        if todoCompletedL.get item then
+                            "Done "
+                        else
+                            "Todo"
+                    ]
                 ]
             , div
                 [ class "flex-auto"
                 ]
                 [ input
-                    [ class <| "block h1 col-12 black muted " ++ editableInputStyle
+                    [ class <|
+                        "block h1 col-12 navy muted "
+                            ++ if editable then
+                                "border border-navy"
+                               else
+                                "muted border-none"
                     , type' "text"
                     , disabled <| not editable
                     , value
@@ -54,32 +60,37 @@ itemView item =
                     ]
                     []
                 ]
-            , button
-                [ class "h4 regular btn"
-                , onClick <|
-                    if editable then
-                        CancelEditTodo item
-                    else
-                        EditTodo item
-                ]
-                [ text <|
-                    if editable then
-                        "Cancel"
-                    else
-                        "Edit"
-                ]
-            , button
-                [ class "h4 regular btn"
-                , onClick <|
-                    if editable then
-                        SaveTodo item
-                    else
-                        DeleteTodo item
-                ]
-                [ text <|
-                    if editable then
-                        "Update"
-                    else
-                        "Delete"
-                ]
+            , if editable then
+                div []
+                    [ button
+                        [ class
+                            "ml2 h4 regular btn btn-outline green"
+                        , onClick <| SaveTodo item
+                        ]
+                        [ text "Update"
+                        ]
+                    , button
+                        [ class <|
+                            "h4 regular btn btn-outline ml2 gray"
+                        , onClick <| CancelEditTodo item
+                        ]
+                        [ text "Cancel"
+                        ]
+                    ]
+              else
+                div []
+                    [ button
+                        [ class "ml2 h4 regular btn btn-outline fuchsia"
+                        , onClick <| DeleteTodo item
+                        ]
+                        [ text "Delete"
+                        ]
+                    , button
+                        [ class <|
+                            "h4 regular btn btn-outline ml2 navy"
+                        , onClick <| EditTodo item
+                        ]
+                        [ text "Edit"
+                        ]
+                    ]
             ]

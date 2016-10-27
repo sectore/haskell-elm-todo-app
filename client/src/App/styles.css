@@ -6,3 +6,7 @@
 button:disabled {
   cursor: not-allowed;
 }
+
+.btn:focus {
+  box-shadow: none;
+}
