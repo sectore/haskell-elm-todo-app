@@ -1,8 +1,11 @@
-# _still in progress ..._
+### _... still in progress ..._
 
 # haskell-elm-todo-app
 
+
 Todo app build with [Haskell](https://www.haskell.org/) ([Servant](http://haskell-servant.github.io/), [Persistent](https://hackage.haskell.org/package/persistent) on server-side and [Elm](http://elm-lang.org/) on client-side.
+
+![screenshot](./screenshot.png)
 
 ## Instructions
 
