@@ -19,7 +19,7 @@ newTodo todo =
             [ h1 [ class "2 regular caps silver" ]
                 [ text "Haskell + Elm Todo List" ]
             , input
-                [ class "col-10 field h2 p2 mt2 mb2 border-none"
+                [ class "col-10 field h2 p2 mt2 mb2 border-none navy"
                 , type' "text"
                 , value todo.description
                 , placeholder "Enter new Todo"

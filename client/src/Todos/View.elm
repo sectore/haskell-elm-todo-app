@@ -56,7 +56,7 @@ itemView item =
                 ]
                 [ input
                     [ class <|
-                        "block h1 col-12 navy muted "
+                        "block h1 col-12 navy "
                             ++ if editable then
                                 "border border-navy"
                                else
