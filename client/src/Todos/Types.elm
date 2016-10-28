@@ -30,7 +30,7 @@ type Msg
     | EditTodo TodoItem
     | CancelEditTodo TodoItem
     | UpdateDescription TodoItem String
-    | SaveTodo TodoItem
+    | UpdateTodo TodoItem
     | DeleteTodo TodoItem
     | FetchTodosFail Http.Error
     | FetchTodosDone (List Todo.Todo)

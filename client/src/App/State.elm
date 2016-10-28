@@ -98,18 +98,13 @@ updateTodos msg writer =
                             Todo.deleteTodo todoItem.todo
                         )
 
-                Todos.SaveTodo todoItem ->
-                    -- FIXME: get a fresh todoItem again, which is just updated by sub module before
-                    case Todos.getTodoItem todoItem todosModel of
-                        Just todoItem' ->
-                            Return.mapWith
-                                (\m -> { m | todos = todosModel })
-                                (Cmd.map TodoMsg <|
-                                    Todo.updateTodo todoItem'.todo
-                                )
-
-                        Nothing ->
-                            Return.zero
+                Todos.UpdateTodo todoItem ->
+                    Return.mapWith
+                        (\m -> { m | todos = todosModel })
+                        (Cmd.map TodoMsg <|
+                            Todo.updateTodo <|
+                                .todo todoItem
+                        )
 
                 Todos.ToggleTodoDone todoItem ->
                     let

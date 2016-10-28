@@ -41,35 +41,40 @@ update msg todos =
 
             CancelEditTodo todoItem ->
                 let
+                    todo' =
+                        .todo todoItem
+
                     todoItem' =
                         { todoItem
                             | editable = False
                             , description = ""
+                            , todo = { todo' | description = .description todoItem }
                         }
                 in
                     Return.map <| updateTodoItem todoItem'
 
-            SaveTodo todoItem ->
+            UpdateTodo todoItem ->
                 let
                     todo' =
                         todoItem.todo
-
-                    description =
-                        todoItem.description
 
                     todoItem' =
                         { todoItem
                             | editable = False
                             , description = ""
-                            , todo = { todo' | description = description }
                         }
                 in
                     Return.map <| updateTodoItem todoItem'
 
             UpdateDescription todoItem description ->
                 let
+                    todo' =
+                        .todo todoItem
+
                     todoItem' =
-                        { todoItem | description = description }
+                        { todoItem
+                            | todo = { todo' | description = description }
+                        }
                 in
                     Return.map <| updateTodoItem todoItem'
 

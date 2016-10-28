@@ -63,11 +63,7 @@ itemView item =
                                 "muted border-none"
                     , type' "text"
                     , disabled <| not editable
-                    , value <|
-                        if editable then
-                            item.description
-                        else
-                            todo.description
+                    , value todo.description
                     , onInput (UpdateDescription item)
                     ]
                     []
@@ -84,7 +80,7 @@ itemView item =
                     , button
                         [ class
                             "ml2 h4 regular btn btn-outline green"
-                        , onClick <| SaveTodo item
+                        , onClick <| UpdateTodo item
                         ]
                         [ text "Update"
                         ]
