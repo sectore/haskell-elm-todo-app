@@ -19,9 +19,16 @@ listView todos visibility =
 
                 _ ->
                     True
+
+        hasTodos =
+            List.length todos > 0
     in
-        ul [ class "list-reset m0" ]
-            (List.map itemView <| List.filter isVisible todos)
+        if hasTodos then
+            ul [ class "list-reset m0" ]
+                (List.map itemView <| List.filter isVisible todos)
+        else
+            p [ class "center h1 gray regular px2 pt2 " ]
+                [ text "Eeeeeh, nothing to do ... ?" ]
 
 
 itemView : TodoItem -> Html Msg
