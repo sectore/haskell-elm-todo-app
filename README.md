@@ -1,15 +1,23 @@
-### _... still in progress ..._
-
 # haskell-elm-todo-app
 
 
-Todo app build with [Haskell](https://www.haskell.org/) ([Servant](http://haskell-servant.github.io/), [Persistent](https://hackage.haskell.org/package/persistent) on server-side and [Elm](http://elm-lang.org/) on client-side.
+Todo app build with [`Haskell`](https://www.haskell.org/) ([`Servant`](http://haskell-servant.github.io/), [`Persistent`](https://hackage.haskell.org/package/persistent)) on server-side and [`Elm`](http://elm-lang.org/) on client-side.
 
-![screenshot](./screenshot.png)
+![screenshot](./screencast.gif)
+
+## _Random notes_
+
+The modular structure of the `Elm` app based on the article "[How I Structure Elm Apps](http://blog.jenkster.com/2016/04/how-i-structure-elm-apps.html)" by [Kris Jenkins](https://github.com/krisajenkins). It also uses the `elm-return` library by [Isaac Shapira @Fresheyeball]() for using a [`Writer monad` approach](http://mutanatum.com/posts/2016-09-18-Return.html) with any `update` function.
+
+It might be overkill somehow to use all these things for a simple Todo app. Anyway, I just wanted to check it out what is possible and how does it feel to write a bigger `Elm` application in any future...
+
+*BTW:* I'm available for new Elm jobs / projects. Feel free to [contact me](https://github.com/sectore) any time.
+
+
 
 ## Instructions
 
-### Build and run server-side app
+### Server-side app
 
 - Goto project folder
 
@@ -41,7 +49,7 @@ halive src/Main.hs
 stack build --test
 ```
 
-### DB queries
+#### DB queries
 
 by using [httpie](https://github.com/jkbrzt/httpie):
 
@@ -65,7 +73,7 @@ http localhost:3000/todos
 ```
 
 
-### Build and run client-side app
+### Client-side app
 
 - Goto project folder
 
