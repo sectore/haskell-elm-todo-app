@@ -7,11 +7,11 @@ Todo app build with [`Haskell`](https://www.haskell.org/) ([`Servant`](http://ha
 
 ## _Random notes_
 
-The modular structure of the `Elm` app based on the article "[How I Structure Elm Apps](http://blog.jenkster.com/2016/04/how-i-structure-elm-apps.html)" by [Kris Jenkins](https://github.com/krisajenkins). It also uses the `elm-return` library by [Isaac Shapira @Fresheyeball]() for using a [`Writer monad` approach](http://mutanatum.com/posts/2016-09-18-Return.html) with any `update` function.
+The modular structure of the `Elm` app based on the article "[How I Structure Elm Apps](http://blog.jenkster.com/2016/04/how-i-structure-elm-apps.html)" by [Kris Jenkins](https://github.com/krisajenkins). It also uses the `elm-return` library by [Isaac Shapira](https://github.com/Fresheyeball) for using a [`Writer monad` approach](http://mutanatum.com/posts/2016-09-18-Return.html) with any `update` function.
 
 It might be overkill somehow to use all these things for a simple Todo app. Anyway, I just wanted to check it out what is possible and how does it feel to write a bigger `Elm` application in any future...
 
-*BTW:* I'm available for new Elm jobs / projects. Feel free to [contact me](https://github.com/sectore) any time.
+**BTW:** I'm available for new Elm jobs / projects. Feel free to [contact me](https://github.com/sectore) any time.
 
 
 
@@ -113,13 +113,18 @@ Open [http://localhost:3333](http://localhost:3333).
 
 - "Todobackend" with Servant: [https://github.com/jhedev/todobackend-haskell/tree/master/todobackend-servant](https://github.com/jhedev/todobackend-haskell/tree/master/todobackend-servant)
 
-- Album app (Haskell + Elm) by [Magnus Rundberget](https://github.com/rundis): [https://github.com/rundis/albums](https://github.com/rundis/albums)
+- Album app (Haskell + Elm) by [Magnus Rundberget / @rundis](https://github.com/rundis): [https://github.com/rundis/albums](https://github.com/rundis/albums)
 
 - DB example of "[5 Ways to Test Application Code that Accesses a Database in Haskell](https://github.com/cdepillabout/testing-code-that-accesses-db-in-haskell/)"
 
 
 ### Helpful Elm stuff
 
-- Blog post "[How I Structure Elm Apps](http://blog.jenkster.com/2016/04/how-i-structure-elm-apps.html)" by [Kris Jenkins](https://github.com/krisajenkins)
+- Blog post "[How I Structure Elm Apps](http://blog.jenkster.com/2016/04/how-i-structure-elm-apps.html)" by [Kris Jenkins / @krisajenkins](https://github.com/krisajenkins)
 
-- [Advanced example](https://github.com/krisajenkins/elm-dialog/tree/master/examples/Advanced) of `elm-dialog` by [Kris Jenkins](https://github.com/krisajenkins)
+- [Advanced example](https://github.com/krisajenkins/elm-dialog/tree/master/examples/Advanced) of `elm-dialog` by [Kris Jenkins /  @krisajenkins](https://github.com/krisajenkins)
+
+- Blog post ["The Return Monad"](http://mutanatum.com/posts/2016-09-18-Return.html) by [Isaac Shapira / @Fresheyeball](https://github.com/Fresheyeball)
+
+
+- Blog post ["Optical Swordplay With Components"](https://toast.al/posts/2016-10-20-optical-swordplay-with-components.html) by [Kyle J. Kress / @toastal](https://github.com/toastal)
