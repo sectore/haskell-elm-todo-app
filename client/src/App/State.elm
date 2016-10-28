@@ -1,6 +1,5 @@
 module App.State exposing (..)
 
-import Monocle.Lens exposing (Lens)
 import App.Types exposing (..)
 import Todos.State as Todos
 import Todos.Api as Todos
@@ -20,20 +19,6 @@ initialModel =
     { todos = Todos.initialTodos
     , newTodo = Todo.initialNewTodo
     }
-
-
-
--- Lens
-
-
-todosL : Lens Model Todos.Todos
-todosL =
-    Lens .todos (\x m -> { m | todos = x })
-
-
-newTodoL : Lens Model Todo.Todo
-newTodoL =
-    Lens .newTodo (\x m -> { m | newTodo = x })
 
 
 
@@ -77,7 +62,7 @@ updateTodo msg writer =
                             List.append appModel.todos [ Todos.createTodoItem todoModel ]
                     in
                         Return.mapWith
-                            (\m -> m |> .set todosL todos |> .set newTodoL Todo.emptyTodo)
+                            (\m -> { m | todos = todos, newTodo = Todo.emptyTodo })
                             (Cmd.map TodoMsg <|
                                 Todo.saveTodo todoModel
                             )
@@ -100,14 +85,11 @@ updateTodos msg writer =
             |> case msg of
                 Todos.FetchTodosDone todos ->
                     Return.map <|
-                        .set todosL <|
-                            List.map Todos.createTodoItem todos
+                        (\m -> { m | todos = List.map Todos.createTodoItem todos })
 
                 Todos.DeleteTodo todoItem ->
                     Return.mapWith
-                        (.set todosL <|
-                            Todos.deleteTodoItem todoItem todosModel
-                        )
+                        (\m -> { m | todos = Todos.deleteTodoItem todoItem todosModel })
                         (Cmd.map TodoMsg <|
                             Todo.deleteTodo todoItem.todo
                         )
@@ -117,10 +99,9 @@ updateTodos msg writer =
                     case Todos.getTodoItem todoItem todosModel of
                         Just todoItem' ->
                             Return.mapWith
-                                (.set todosL todosModel)
+                                (\m -> { m | todos = todosModel })
                                 (Cmd.map TodoMsg <|
-                                    Todo.updateTodo <|
-                                        .get Todos.itemTodoL todoItem'
+                                    Todo.updateTodo todoItem'.todo
                                 )
 
                         Nothing ->
@@ -135,12 +116,12 @@ updateTodos msg writer =
                             { todo | completed = not todo.completed }
                     in
                         Return.mapWith
-                            (.set todosL <| Todos.updateTodo todo' todosModel)
+                            (\m -> { m | todos = Todos.updateTodo todo' todosModel })
                             (Cmd.map TodoMsg <|
                                 Todo.updateTodo todo'
                             )
 
                 _ ->
                     Return.mapWith
-                        (.set todosL todosModel)
+                        (\m -> { m | todos = todosModel })
                         (Cmd.map TodosMsg todosCmd)

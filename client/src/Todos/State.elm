@@ -1,10 +1,8 @@
 module Todos.State exposing (..)
 
-import Monocle.Lens exposing (Lens, compose)
 import Return exposing (Return)
 import Todos.Types exposing (..)
 import Todo.Types as Todo
-import Todo.State as Todo
 
 
 -- Model
@@ -13,40 +11,6 @@ import Todo.State as Todo
 initialTodos : Todos
 initialTodos =
     []
-
-
-
--- Lens
-
-
-itemDescriptionL : Lens TodoItem String
-itemDescriptionL =
-    Lens .description (\x m -> { m | description = x })
-
-
-itemEditableL : Lens TodoItem Bool
-itemEditableL =
-    Lens .editable (\x m -> { m | editable = x })
-
-
-itemTodoL : Lens TodoItem Todo.Todo
-itemTodoL =
-    Lens .todo (\x m -> { m | todo = x })
-
-
-todoIdL : Lens TodoItem Int
-todoIdL =
-    itemTodoL `compose` Todo.idL
-
-
-todoDescriptionL : Lens TodoItem String
-todoDescriptionL =
-    itemTodoL `compose` Todo.descriptionL
-
-
-todoCompletedL : Lens TodoItem Bool
-todoCompletedL =
-    itemTodoL `compose` Todo.completedL
 
 
 
@@ -59,23 +23,24 @@ update msg todos =
         |> case msg of
             EditTodo todoItem ->
                 let
-                    description =
-                        todoItem
-                            |> .get todoDescriptionL
+                    todo =
+                        todoItem.todo
 
                     todoItem' =
-                        todoItem
-                            |> .set itemEditableL True
-                            |> .set itemDescriptionL description
+                        { todoItem
+                            | editable = True
+                            , description = todo.description
+                        }
                 in
                     Return.map <| updateTodoItem todoItem'
 
             CancelEditTodo todoItem ->
                 let
                     todoItem' =
-                        todoItem
-                            |> .set itemEditableL False
-                            |> .set itemDescriptionL ""
+                        { todoItem
+                            | editable = False
+                            , description = ""
+                        }
                 in
                     Return.map <| updateTodoItem todoItem'
 
@@ -125,8 +90,8 @@ updateTodo : Todo.Todo -> Todos -> Todos
 updateTodo todo =
     List.map
         (\todoItem ->
-            if .get todoIdL todoItem == .get Todo.idL todo then
-                .set itemTodoL todo todoItem
+            if todoItem.todo.id == todo.id then
+                { todoItem | todo = todo }
             else
                 todoItem
         )
@@ -136,7 +101,7 @@ updateTodoItem : TodoItem -> Todos -> Todos
 updateTodoItem todoItem =
     List.map
         (\todoItem' ->
-            if .get todoIdL todoItem' == .get todoIdL todoItem then
+            if todoItem'.todo.id == todoItem.todo.id then
                 todoItem
             else
                 todoItem'
@@ -148,6 +113,6 @@ getTodoItem todoItem todos =
     List.head <|
         List.filter
             (\todoItem' ->
-                .get todoIdL todoItem' == .get todoIdL todoItem
+                todoItem'.todo.id == todoItem.todo.id
             )
             todos

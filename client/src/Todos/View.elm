@@ -16,22 +16,25 @@ listView todos =
 itemView : TodoItem -> Html Msg
 itemView item =
     let
+        todo =
+            item.todo
+
         editable =
-            itemEditableL.get item
+            item.editable
     in
         li [ class "flex flex-center p2 border-bottom silver" ]
             [ div [ class "pr2" ]
                 [ button
                     [ class <|
                         "h6 regular italic btn m0 p0 pl1 pr1 white rounded"
-                            ++ if todoCompletedL.get item then
+                            ++ if todo.completed then
                                 " bg-green "
                                else
                                 " bg-gray"
                     , onClick <| ToggleTodoDone item
                     ]
                     [ text <|
-                        if todoCompletedL.get item then
+                        if todo.completed then
                             "Done "
                         else
                             "Todo"
@@ -49,13 +52,11 @@ itemView item =
                                 "muted border-none"
                     , type' "text"
                     , disabled <| not editable
-                    , value
-                        (item
-                            |> if editable then
-                                .get itemDescriptionL
-                               else
-                                .get todoDescriptionL
-                        )
+                    , value <|
+                        if editable then
+                            item.description
+                        else
+                            todo.description
                     , onInput (UpdateDescription item)
                     ]
                     []

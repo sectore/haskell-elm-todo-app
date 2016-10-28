@@ -2,7 +2,6 @@ module Todo.View exposing (..)
 
 import Json.Decode as Decode
 import Todo.Types exposing (Todo, Msg(..))
-import Todo.State exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onInput, keyCode, on, onClick)
@@ -14,7 +13,7 @@ newTodo todo =
     let
         hasEmptyDescription : Todo -> Bool
         hasEmptyDescription todo =
-            String.isEmpty <| descriptionL.get todo
+            String.isEmpty <| .description todo
     in
         div [ class "clearfix mt3 mb3" ]
             [ h1 [ class "2 regular caps silver" ]
