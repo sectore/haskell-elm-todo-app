@@ -17,6 +17,7 @@ import Return exposing (Return)
 initialModel : Model
 initialModel =
     { todos = Todos.initialTodos
+    , todosVisibility = Todos.initialVisibility
     , newTodo = Todo.initialNewTodo
     }
 
@@ -120,6 +121,9 @@ updateTodos msg writer =
                             (Cmd.map TodoMsg <|
                                 Todo.updateTodo todo'
                             )
+
+                Todos.SetVisibility visibility ->
+                    Return.map (\m -> { m | todosVisibility = visibility })
 
                 _ ->
                     Return.mapWith

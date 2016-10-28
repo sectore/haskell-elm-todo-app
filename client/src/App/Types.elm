@@ -6,6 +6,7 @@ import Todo.Types as Todo
 
 type alias Model =
     { todos : Todos.Todos
+    , todosVisibility : Todos.Visibility
     , newTodo : Todo.Todo
     }
 

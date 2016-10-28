@@ -11,8 +11,18 @@ type alias TodoItem =
     }
 
 
+type alias TodoItems =
+    List TodoItem
+
+
 type alias Todos =
     List TodoItem
+
+
+type Visibility
+    = All
+    | Done
+    | Active
 
 
 type Msg
@@ -24,3 +34,4 @@ type Msg
     | DeleteTodo TodoItem
     | FetchTodosFail Http.Error
     | FetchTodosDone (List Todo.Todo)
+    | SetVisibility Visibility

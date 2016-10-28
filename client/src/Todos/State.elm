@@ -8,6 +8,11 @@ import Todo.Types as Todo
 -- Model
 
 
+initialVisibility : Visibility
+initialVisibility =
+    Done
+
+
 initialTodos : Todos
 initialTodos =
     []

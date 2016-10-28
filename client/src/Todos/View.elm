@@ -4,13 +4,24 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, onInput)
 import Html exposing (..)
 import Todos.Types exposing (..)
-import Todos.State exposing (..)
 
 
-listView : Todos -> Html Msg
-listView todos =
-    ul [ class "list-reset m0" ]
-        (List.map itemView todos)
+listView : Todos -> Visibility -> Html Msg
+listView todos visibility =
+    let
+        isVisible todoItem =
+            case Debug.log "v" visibility of
+                Done ->
+                    todoItem.todo.completed
+
+                Active ->
+                    not todoItem.todo.completed
+
+                _ ->
+                    True
+    in
+        ul [ class "list-reset m0" ]
+            (List.map itemView <| List.filter isVisible todos)
 
 
 itemView : TodoItem -> Html Msg
