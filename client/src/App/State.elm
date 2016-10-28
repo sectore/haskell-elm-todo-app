@@ -56,17 +56,20 @@ updateTodo msg writer =
             Todo.update msg appModel.newTodo
     in
         writer
-            |> case msg of
+            |> case Debug.log "t " msg of
                 Todo.Save ->
+                    Return.command (Cmd.map TodoMsg <| Todo.saveTodo todoModel)
+
+                Todo.SaveDone todoId ->
                     let
+                        todo =
+                            { todoModel | id = todoId }
+
                         todos =
-                            List.append appModel.todos [ Todos.createTodoItem todoModel ]
+                            List.append appModel.todos [ Todos.createTodoItem todo ]
                     in
-                        Return.mapWith
+                        Return.map
                             (\m -> { m | todos = todos, newTodo = Todo.emptyTodo })
-                            (Cmd.map TodoMsg <|
-                                Todo.saveTodo todoModel
-                            )
 
                 _ ->
                     Return.mapWith (\m -> { m | newTodo = todoModel }) <|
@@ -83,7 +86,7 @@ updateTodos msg writer =
             Todos.update msg appModel.todos
     in
         writer
-            |> case msg of
+            |> case Debug.log "ts " msg of
                 Todos.FetchTodosDone todos ->
                     Return.map <|
                         (\m -> { m | todos = List.map Todos.createTodoItem todos })
