@@ -10,7 +10,7 @@ import Todo.Types as Todo
 
 initialVisibility : Visibility
 initialVisibility =
-    Done
+    All
 
 
 initialTodos : Todos

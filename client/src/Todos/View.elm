@@ -10,7 +10,7 @@ listView : Todos -> Visibility -> Html Msg
 listView todos visibility =
     let
         isVisible todoItem =
-            case Debug.log "v" visibility of
+            case visibility of
                 Done ->
                     todoItem.todo.completed
 
@@ -75,18 +75,18 @@ itemView item =
             , if editable then
                 div []
                     [ button
-                        [ class
-                            "ml2 h4 regular btn btn-outline green"
-                        , onClick <| SaveTodo item
-                        ]
-                        [ text "Update"
-                        ]
-                    , button
                         [ class <|
                             "h4 regular btn btn-outline ml2 gray"
                         , onClick <| CancelEditTodo item
                         ]
                         [ text "Cancel"
+                        ]
+                    , button
+                        [ class
+                            "ml2 h4 regular btn btn-outline green"
+                        , onClick <| SaveTodo item
+                        ]
+                        [ text "Update"
                         ]
                     ]
               else
