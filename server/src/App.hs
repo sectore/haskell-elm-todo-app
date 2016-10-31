@@ -4,29 +4,39 @@
 
 module App where
 
-import           Api                         (Api, api)
-import           Control.Monad.Catch         ()
-import           Control.Monad.IO.Class      (liftIO)
-import           Control.Monad.Logger        (runStderrLoggingT)
-import           Data.String.Conversions     (cs)
-import           Data.Text                   ()
-import           Database.Persist.Sql        (ConnectionPool, Entity,
-                                              runSqlPersistMPool, runSqlPool,
-                                              (==.))
-import           Database.Persist.Sqlite     (createSqlitePool, delete, insert,
-                                              replace, runMigration,
-                                              selectFirst, selectList)
+import           Api                                   (Api, api)
+import           Control.Monad.Catch                   ()
+import           Control.Monad.IO.Class                (liftIO)
+import           Control.Monad.Logger                  (NoLoggingT,
+                                                        runStderrLoggingT)
+import           Control.Monad.Trans.Reader            (ReaderT)
+import           Control.Monad.Trans.Resource.Internal (ResourceT)
+
+import           Data.String.Conversions               (cs)
+import           Data.Text                             ()
+import           Database.Persist.Sql                  (ConnectionPool, Entity,
+                                                        runSqlPersistMPool,
+                                                        runSqlPool, (==.))
+
+import           Database.Persist.Sql.Types.Internal   (SqlBackend)
+import           Database.Persist.Sqlite               (createSqlitePool,
+                                                        delete, insert, replace,
+                                                        runMigration,
+                                                        selectFirst, selectList)
 -- import           Models                      (Todo, TodoId, migrateAll)
 import           Models
-import           Network.Wai                 (Application, Middleware)
-import           Network.Wai.Handler.Warp    as Warp
-import           Network.Wai.Middleware.Cors (cors, corsMethods,
-                                              corsRequestHeaders,
-                                              simpleCorsResourcePolicy,
-                                              simpleMethods)
+import           Network.Wai                           (Application, Middleware)
+import           Network.Wai.Handler.Warp              as Warp
+import           Network.Wai.Middleware.Cors           (cors, corsMethods,
+                                                        corsRequestHeaders,
+                                                        simpleCorsResourcePolicy,
+                                                        simpleMethods)
 import           Servant.API
 -- import           Servant.API                 ((:<|>), NoContent)
-import           Servant.Server              (Server, serve)
+import           Servant.Server                        (Server, serve)
+
+
+
 
 server :: ConnectionPool -> Server Api
 server pool =      createTodo
@@ -41,26 +51,27 @@ server pool =      createTodo
     deleteTodo todoId      = liftIO $ deleteTodo' todoId
     readTodos              = liftIO readTodos'
 
+    runSql :: ReaderT SqlBackend (NoLoggingT (ResourceT IO)) a -> IO a
+    runSql query = runSqlPersistMPool query pool
+
     createTodo' :: Todo -> IO TodoId
-    createTodo' todo = flip runSqlPersistMPool pool $
-      insert todo
+    createTodo' todo = runSql $ insert todo
 
     readTodo' :: TodoId -> IO (Maybe (Entity Todo))
-    readTodo' todoId = flip runSqlPersistMPool pool $
-      selectFirst [TodoId ==. todoId] []
+    readTodo' todoId = runSql $ selectFirst [TodoId ==. todoId] []
 
     updateTodo' :: TodoId -> Todo -> IO NoContent
-    updateTodo' todoId todo = flip runSqlPersistMPool pool $ do
+    updateTodo' todoId todo = runSql $ do
       replace todoId todo
       return NoContent
 
     deleteTodo' :: TodoId -> IO NoContent
-    deleteTodo' todoId = flip runSqlPersistMPool pool $ do
+    deleteTodo' todoId = runSql $ do
       delete todoId
       return NoContent
 
     readTodos' :: IO [Entity Todo]
-    readTodos' = flip runSqlPersistMPool pool $
+    readTodos' = runSql $
       selectList [] []
 
 app :: ConnectionPool -> Application

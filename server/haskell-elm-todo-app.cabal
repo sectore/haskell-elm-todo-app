@@ -26,6 +26,7 @@ executable haskell-elm-todo-app
                      , persistent
                      , persistent-template
                      , persistent-sqlite
+                     , resourcet
                      , servant
                      , servant-server
                      , string-conversions
@@ -60,6 +61,7 @@ test-suite haskell-elm-todo-app-test
                      , persistent
                      , persistent-template
                      , persistent-sqlite
+                     , resourcet
                      , servant
                      , servant-server
                      , servant-client
