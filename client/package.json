@@ -33,15 +33,15 @@
     "elm-hot-loader": "^0.3.4",
     "elm-webpack-loader": "^3.0.6",
     "file-loader": "^0.9.0",
-    "html-webpack-plugin": "^2.24.0",
+    "html-webpack-plugin": "^2.24.1",
     "postcss-cssnext": "^2.8.0",
     "postcss-import": "^8.1.2",
-    "postcss-loader": "^1.0.0",
+    "postcss-loader": "^1.1.0",
     "postcss-modules-local-by-default": "^1.1.1",
     "precss": "^1.4.0",
     "style-loader": "^0.13.1",
     "url-loader": "^0.5.7",
-    "webpack": "^1.13.2",
+    "webpack": "^1.13.3",
     "webpack-dev-server": "^1.16.2"
   }
 }
