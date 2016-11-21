@@ -31,52 +31,52 @@ update msg todos =
                     todo =
                         todoItem.todo
 
-                    todoItem' =
+                    todoItem_ =
                         { todoItem
                             | editable = True
                             , description = todo.description
                         }
                 in
-                    Return.map <| updateTodoItem todoItem'
+                    Return.map <| updateTodoItem todoItem_
 
             CancelEditTodo todoItem ->
                 let
-                    todo' =
+                    todo_ =
                         .todo todoItem
 
-                    todoItem' =
+                    todoItem_ =
                         { todoItem
                             | editable = False
                             , description = ""
-                            , todo = { todo' | description = .description todoItem }
+                            , todo = { todo_ | description = .description todoItem }
                         }
                 in
-                    Return.map <| updateTodoItem todoItem'
+                    Return.map <| updateTodoItem todoItem_
 
             UpdateTodo todoItem ->
                 let
-                    todo' =
+                    todo_ =
                         todoItem.todo
 
-                    todoItem' =
+                    todoItem_ =
                         { todoItem
                             | editable = False
                             , description = ""
                         }
                 in
-                    Return.map <| updateTodoItem todoItem'
+                    Return.map <| updateTodoItem todoItem_
 
             UpdateDescription todoItem description ->
                 let
-                    todo' =
+                    todo_ =
                         .todo todoItem
 
-                    todoItem' =
+                    todoItem_ =
                         { todoItem
-                            | todo = { todo' | description = description }
+                            | todo = { todo_ | description = description }
                         }
                 in
-                    Return.map <| updateTodoItem todoItem'
+                    Return.map <| updateTodoItem todoItem_
 
             _ ->
                 Return.zero
@@ -110,11 +110,11 @@ updateTodo todo =
 updateTodoItem : TodoItem -> Todos -> Todos
 updateTodoItem todoItem =
     List.map
-        (\todoItem' ->
-            if todoItem'.todo.id == todoItem.todo.id then
+        (\todoItem_ ->
+            if todoItem_.todo.id == todoItem.todo.id then
                 todoItem
             else
-                todoItem'
+                todoItem_
         )
 
 
@@ -122,7 +122,7 @@ getTodoItem : TodoItem -> Todos -> Maybe TodoItem
 getTodoItem todoItem todos =
     List.head <|
         List.filter
-            (\todoItem' ->
-                todoItem'.todo.id == todoItem.todo.id
+            (\todoItem_ ->
+                todoItem_.todo.id == todoItem.todo.id
             )
             todos

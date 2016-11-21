@@ -68,7 +68,7 @@ itemView item =
                                 "border border-navy"
                                else
                                 "muted border-none"
-                    , type' "text"
+                    , type_ "text"
                     , disabled <| not editable
                     , value todo.description
                     , onInput (UpdateDescription item)

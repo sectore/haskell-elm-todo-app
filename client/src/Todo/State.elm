@@ -26,7 +26,7 @@ update msg todo =
     Return.singleton todo
         |> case msg of
             Update value ->
-                Return.map (\todo' -> { todo' | description = value })
+                Return.map (\todo_ -> { todo_ | description = value })
 
             Cancel ->
                 Return.map <| always emptyTodo

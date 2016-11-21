@@ -32,6 +32,5 @@ type Msg
     | UpdateDescription TodoItem String
     | UpdateTodo TodoItem
     | DeleteTodo TodoItem
-    | FetchTodosFail Http.Error
-    | FetchTodosDone (List Todo.Todo)
+    | TodosFetched (Result Http.Error (List Todo.Todo))
     | SetVisibility Visibility

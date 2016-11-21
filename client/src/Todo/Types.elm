@@ -13,11 +13,8 @@ type alias Todo =
 type Msg
     = Update String
     | Save
-    | SaveDone Int
-    | SaveFailed Http.Error
-    | DeleteDone Http.Response
-    | DeleteFailed Http.Error
-    | UpdateDone Http.Response
-    | UpdateFailed Http.Error
+    | Saved (Result Http.Error Int)
+    | Deleted (Result Http.Error String)
+    | Updated (Result Http.Error String)
     | Cancel
     | NoOp

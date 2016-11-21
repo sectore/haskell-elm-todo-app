@@ -1,22 +1,24 @@
-module Todos.Api exposing (getTodos)
+module Todos.Api
+    exposing
+        ( getTodos
+        )
 
 import Http
 import Json.Decode as Decode exposing (Decoder)
 import Json.Decode.Pipeline as Pipeline
-import Task
 import Todo.Types as Todo
 import Todos.Types exposing (..)
 
 
-apiGetTodos : Task.Task Http.Error (List Todo.Todo)
+apiGetTodos : Http.Request (List Todo.Todo)
 apiGetTodos =
-    Http.get todosDecoder "http://localhost:3000/todos/"
+    Http.get "http://localhost:3000/todos/" todosDecoder
 
 
 getTodos : Cmd Msg
 getTodos =
     apiGetTodos
-        |> Task.perform FetchTodosFail FetchTodosDone
+        |> Http.send TodosFetched
 
 
 todoDecoder : Decoder Todo.Todo

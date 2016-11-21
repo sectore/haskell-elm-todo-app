@@ -6,6 +6,7 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onInput, keyCode, on, onClick)
 import String
+import Svg as Svg
 
 
 newTodo : Todo -> Html Msg
@@ -20,7 +21,7 @@ newTodo todo =
                 [ text "Haskell + Elm Todo List" ]
             , input
                 [ class "col-10 field h2 p2 mt2 mb2 border-none navy"
-                , type' "text"
+                , type_ "text"
                 , value todo.description
                 , placeholder "Enter new Todo"
                 , onInput Update
@@ -35,7 +36,7 @@ newTodo todo =
                     , disabled <| hasEmptyDescription todo
                     ]
                     [ text "Add Todo" ]
-                , svg [ class "icon gray", attribute "data-icon" "chevron-right" ] []
+                , Svg.svg [ class "icon gray", attribute "data-icon" "chevron-right" ] []
                 ]
             , button
                 [ class <|
@@ -54,8 +55,8 @@ newTodo todo =
 onKeyDown : Attribute Msg
 onKeyDown =
     let
-        keyDecoder keyCode' =
-            case keyCode' of
+        keyDecoder keyCode_ =
+            case keyCode_ of
                 13 ->
                     Save
 

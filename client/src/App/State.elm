@@ -39,11 +39,11 @@ update : Msg -> Model -> Return Msg Model
 update msg model =
     Return.singleton model
         |> case msg of
-            TodosMsg msg' ->
-                updateTodos msg'
+            TodosMsg msg_ ->
+                updateTodos msg_
 
-            TodoMsg msg' ->
-                updateTodo msg'
+            TodoMsg msg_ ->
+                updateTodo msg_
 
 
 updateTodo : Todo.Msg -> Return Msg Model -> Return Msg Model
@@ -60,7 +60,7 @@ updateTodo msg writer =
                 Todo.Save ->
                     Return.command (Cmd.map TodoMsg <| Todo.saveTodo todoModel)
 
-                Todo.SaveDone todoId ->
+                Todo.Saved (Ok todoId) ->
                     let
                         todo =
                             { todoModel | id = todoId }
@@ -87,7 +87,7 @@ updateTodos msg writer =
     in
         writer
             |> case Debug.log "ts " msg of
-                Todos.FetchTodosDone todos ->
+                Todos.TodosFetched (Ok todos) ->
                     Return.map <|
                         (\m -> { m | todos = List.map Todos.createTodoItem todos })
 
@@ -111,13 +111,13 @@ updateTodos msg writer =
                         todo =
                             todoItem.todo
 
-                        todo' =
+                        todo_ =
                             { todo | completed = not todo.completed }
                     in
                         Return.mapWith
-                            (\m -> { m | todos = Todos.updateTodo todo' todosModel })
+                            (\m -> { m | todos = Todos.updateTodo todo_ todosModel })
                             (Cmd.map TodoMsg <|
-                                Todo.updateTodo todo'
+                                Todo.updateTodo todo_
                             )
 
                 Todos.SetVisibility visibility ->

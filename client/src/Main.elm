@@ -1,15 +1,16 @@
 module Main exposing (..)
 
-import Html.App as Html
-import App.View as View
-import App.State as State
+import Html
+import App.View as App
+import App.State as App
+import App.Types as App
 
 
-main : Program Never
+main : Program Never App.Model App.Msg
 main =
     Html.program
-        { init = ( State.initialModel, State.initialCommand )
-        , view = View.root
-        , update = State.update
+        { init = ( App.initialModel, App.initialCommand )
+        , view = App.root
+        , update = App.update
         , subscriptions = always Sub.none
         }
