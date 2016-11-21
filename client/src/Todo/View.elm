@@ -6,7 +6,6 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onInput, keyCode, on, onClick)
 import String
-import Svg as Svg
 
 
 newTodo : Todo -> Html Msg
@@ -36,7 +35,6 @@ newTodo todo =
                     , disabled <| hasEmptyDescription todo
                     ]
                     [ text "Add Todo" ]
-                , Svg.svg [ class "icon gray", attribute "data-icon" "chevron-right" ] []
                 ]
             , button
                 [ class <|
