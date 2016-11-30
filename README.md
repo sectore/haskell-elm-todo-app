@@ -11,9 +11,6 @@ The modular structure of the `Elm` app based on the article "[How I Structure El
 
 It might be overkill somehow to use all these things for a simple Todo app. Anyway, I just wanted to check it out what is possible and how does it feel to write a bigger `Elm` application in any future...
 
-**BTW:** I'm available for new Elm jobs / projects. Feel free to [contact me](https://github.com/sectore) any time.
-
-
 
 ## Instructions
 
