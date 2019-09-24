@@ -1,0 +1,7 @@
+{
+  "recommendations": [
+    "justusadam.language-haskell",
+    "alanz.vscode-hie-server",
+    "sbrink.elm",
+  ]
+}

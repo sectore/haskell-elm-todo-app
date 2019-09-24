@@ -1,0 +1,6 @@
+{
+  "elm.compiler": "./node_modules/.bin/elm",
+  "[elm]": {
+    "editor.formatOnSave": true
+  },
+}
