@@ -1,7 +1,7 @@
 module App.Types exposing (..)
 
-import Todos.Types as Todos
 import Todo.Types as Todo
+import Todos.Types as Todos
 
 
 type alias Model =

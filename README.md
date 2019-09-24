@@ -1,11 +1,12 @@
 # haskell-elm-todo-app
 
+_**Update 09/24/2019:**_ Support of GHC 8.6.5 and Elm 0.19
 
 Todo app build with [`Haskell`](https://www.haskell.org/) ([`Servant`](http://haskell-servant.github.io/), [`Persistent`](https://hackage.haskell.org/package/persistent)) on server-side and [`Elm`](http://elm-lang.org/) on client-side.
 
 ![screenshot](./screencast.gif)
 
-## _Random notes_
+## _Random notes (2016)_
 
 The modular structure of the `Elm` app based on the article "[How I Structure Elm Apps](http://blog.jenkster.com/2016/04/how-i-structure-elm-apps.html)" by [Kris Jenkins](https://github.com/krisajenkins). It also uses the `elm-return` library by [Isaac Shapira](https://github.com/Fresheyeball) for using a [`Writer monad` approach](http://mutanatum.com/posts/2016-09-18-Return.html) with any `update` function.
 
@@ -16,34 +17,22 @@ It might be overkill somehow to use all these things for a simple Todo app. Anyw
 
 ### Server-side app
 
-- Goto project folder
-
-``` shell
-cd {project}/server/
-```
-
-- Build project:
+- Build:
 
 ``` shell
 stack build
 ```
 
-- Execute app
+- Execute:
 
 ``` shell
-stack exec haskell-elm-todo-app
+stack exec haskell-elm-todo
 ```
 
-- OR use live reloading w/ [halive](https://github.com/lukexi/halive)
+- Run tests:
 
 ``` shell
-halive src/Main.hs
-```
-
-- run tests
-
-``` shell
-stack build --test
+stack test
 ```
 
 #### DB queries
@@ -78,13 +67,13 @@ http localhost:3000/todos
 cd {project}/client/
 ```
 
-- Build project:
+- Build:
 
 ``` shell
 npm i
 ```
 
-- Run app
+- Run:
 
 ``` shell
 npm start
@@ -94,7 +83,7 @@ npm start
 Open [http://localhost:3333](http://localhost:3333).
 
 
-## Acknowledge
+## Acknowledge (2016)
 
 ### Helpful Haskell / Servant stuff
 
