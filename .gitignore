@@ -1,2 +1,4 @@
-.DS_Store
+.stack-work/
+sqlite.*
+stack.yaml.lock
 elm-stuff/

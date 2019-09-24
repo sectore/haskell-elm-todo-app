@@ -1,0 +1,64 @@
+name:                haskell-elm-todo-app
+version:             0.1.0.0
+github:              "sectore/haskell-elm-todo-app"
+license:             MIT
+author:              "Jens Krause"
+maintainer:          "email@jkrause.io"
+copyright:           "2016-2019 Jens Krause"
+
+description:         Please see the README on GitHub at <https://github.com/sectore/haskell-elm-todo-app#readme>
+
+default-extensions:
+- DataKinds
+- OverloadedStrings
+
+dependencies:
+- base >= 4.7 && < 5
+- exceptions
+- monad-logger
+- persistent
+- persistent-template
+- persistent-sqlite
+- resourcet
+- servant
+- servant-server
+- string-conversions
+- text
+- transformers
+- wai
+- wai-cors
+- warp
+
+library:
+  source-dirs: src
+
+executables:
+  haskell-elm-todo:
+    main:                Main.hs
+    source-dirs:         src
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - base
+
+tests:
+  tests:
+    main:                Spec.hs
+    source-dirs:         test
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - haskell-elm-todo-app
+    - bytestring
+    - hspec
+    - hspec-wai
+    - hspec-wai-json
+    - QuickCheck
+    - wai-extra
+    - servant-client
+    - http-client
+    - mockery

@@ -16,34 +16,22 @@ It might be overkill somehow to use all these things for a simple Todo app. Anyw
 
 ### Server-side app
 
-- Goto project folder
-
-``` shell
-cd {project}/server/
-```
-
-- Build project:
+- Build:
 
 ``` shell
 stack build
 ```
 
-- Execute app
+- Execute:
 
 ``` shell
-stack exec haskell-elm-todo-app
+stack exec haskell-elm-todo
 ```
 
-- OR use live reloading w/ [halive](https://github.com/lukexi/halive)
+- Run tests
 
 ``` shell
-halive src/Main.hs
-```
-
-- run tests
-
-``` shell
-stack build --test
+stack test
 ```
 
 #### DB queries
