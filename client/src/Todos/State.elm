@@ -1,8 +1,9 @@
 module Todos.State exposing (..)
 
 import Return exposing (Return)
-import Todos.Types exposing (..)
 import Todo.Types as Todo
+import Todos.Types exposing (..)
+
 
 
 -- Model
@@ -25,61 +26,62 @@ initialTodos =
 update : Msg -> Todos -> Return Msg Todos
 update msg todos =
     Return.singleton todos
-        |> case msg of
-            EditTodo todoItem ->
-                let
-                    todo =
-                        todoItem.todo
+        |> (case msg of
+                EditTodo todoItem ->
+                    let
+                        todo =
+                            todoItem.todo
 
-                    todoItem_ =
-                        { todoItem
-                            | editable = True
-                            , description = todo.description
-                        }
-                in
+                        todoItem_ =
+                            { todoItem
+                                | editable = True
+                                , description = todo.description
+                            }
+                    in
                     Return.map <| updateTodoItem todoItem_
 
-            CancelEditTodo todoItem ->
-                let
-                    todo_ =
-                        .todo todoItem
+                CancelEditTodo todoItem ->
+                    let
+                        todo_ =
+                            .todo todoItem
 
-                    todoItem_ =
-                        { todoItem
-                            | editable = False
-                            , description = ""
-                            , todo = { todo_ | description = .description todoItem }
-                        }
-                in
+                        todoItem_ =
+                            { todoItem
+                                | editable = False
+                                , description = ""
+                                , todo = { todo_ | description = .description todoItem }
+                            }
+                    in
                     Return.map <| updateTodoItem todoItem_
 
-            UpdateTodo todoItem ->
-                let
-                    todo_ =
-                        todoItem.todo
+                UpdateTodo todoItem ->
+                    let
+                        todo_ =
+                            todoItem.todo
 
-                    todoItem_ =
-                        { todoItem
-                            | editable = False
-                            , description = ""
-                        }
-                in
+                        todoItem_ =
+                            { todoItem
+                                | editable = False
+                                , description = ""
+                            }
+                    in
                     Return.map <| updateTodoItem todoItem_
 
-            UpdateDescription todoItem description ->
-                let
-                    todo_ =
-                        .todo todoItem
+                UpdateDescription todoItem description ->
+                    let
+                        todo_ =
+                            .todo todoItem
 
-                    todoItem_ =
-                        { todoItem
-                            | todo = { todo_ | description = description }
-                        }
-                in
+                        todoItem_ =
+                            { todoItem
+                                | todo = { todo_ | description = description }
+                            }
+                    in
                     Return.map <| updateTodoItem todoItem_
 
-            _ ->
-                Return.zero
+                _ ->
+                    Return.zero
+           )
 
 
 
@@ -102,6 +104,7 @@ updateTodo todo =
         (\todoItem ->
             if todoItem.todo.id == todo.id then
                 { todoItem | todo = todo }
+
             else
                 todoItem
         )
@@ -113,6 +116,7 @@ updateTodoItem todoItem =
         (\todoItem_ ->
             if todoItem_.todo.id == todoItem.todo.id then
                 todoItem
+
             else
                 todoItem_
         )

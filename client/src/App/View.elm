@@ -1,12 +1,12 @@
 module App.View exposing (..)
 
+import App.Types exposing (Model, Msg(..))
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Todo.View as Todo
-import Todos.View as Todos
 import Todos.Types as Todos
-import App.Types exposing (Model, Msg(..))
+import Todos.View as Todos
 
 
 root : Model -> Html Msg
@@ -38,16 +38,18 @@ resultView todos =
             List.length <|
                 List.filter (\item -> .completed <| .todo <| item) todos
     in
-        p
-            [ class <|
-                "h6 p1 green muted inline-block "
-                    ++ if todosLength == 0 then
+    p
+        [ class <|
+            "h5 p1 green inline-block "
+                ++ (if todosLength == 0 then
                         "hide"
-                       else
+
+                    else
                         ""
-            ]
-            [ text <| toString todosCompleted ++ " / " ++ toString todosLength ++ " done"
-            ]
+                   )
+        ]
+        [ text <| String.fromInt todosCompleted ++ " / " ++ String.fromInt todosLength ++ " done"
+        ]
 
 
 visibilityMenu : Todos.Todos -> Todos.Visibility -> Html Msg
@@ -56,37 +58,38 @@ visibilityMenu todos visibility =
         isDisabled =
             List.length todos == 0
 
-        activeClass visibility value =
-            if visibility == value then
+        activeClass v value =
+            if v == value then
                 " bg-silver gray "
+
             else
                 ""
 
         menuBtnClass =
             "flex-auto h4 py2 regular btn btn-primary bg-gray white not-rounded "
     in
-        div
-            [ class "flex center "
+    div
+        [ class "flex center "
+        ]
+        [ button
+            [ class <| menuBtnClass ++ activeClass visibility Todos.All
+            , onClick <| TodosMsg <| Todos.SetVisibility Todos.All
+            , disabled isDisabled
             ]
-            [ button
-                [ class <| menuBtnClass ++ activeClass visibility Todos.All
-                , onClick <| TodosMsg <| Todos.SetVisibility Todos.All
-                , disabled isDisabled
-                ]
-                [ text "All"
-                ]
-            , button
-                [ class <| menuBtnClass ++ activeClass visibility Todos.Done
-                , onClick <| TodosMsg <| Todos.SetVisibility Todos.Done
-                , disabled isDisabled
-                ]
-                [ text "Done"
-                ]
-            , button
-                [ class <| menuBtnClass ++ activeClass visibility Todos.Active
-                , onClick <| TodosMsg <| Todos.SetVisibility Todos.Active
-                , disabled isDisabled
-                ]
-                [ text "Active"
-                ]
+            [ text "All"
             ]
+        , button
+            [ class <| menuBtnClass ++ activeClass visibility Todos.Done
+            , onClick <| TodosMsg <| Todos.SetVisibility Todos.Done
+            , disabled isDisabled
+            ]
+            [ text "Done"
+            ]
+        , button
+            [ class <| menuBtnClass ++ activeClass visibility Todos.Active
+            , onClick <| TodosMsg <| Todos.SetVisibility Todos.Active
+            , disabled isDisabled
+            ]
+            [ text "Active"
+            ]
+        ]

@@ -1,11 +1,12 @@
 # haskell-elm-todo-app
 
+_**Update 09/24/2019:**_ Support of GHC 8.6.5 and Elm 0.19
 
 Todo app build with [`Haskell`](https://www.haskell.org/) ([`Servant`](http://haskell-servant.github.io/), [`Persistent`](https://hackage.haskell.org/package/persistent)) on server-side and [`Elm`](http://elm-lang.org/) on client-side.
 
 ![screenshot](./screencast.gif)
 
-## _Random notes_
+## _Random notes (2016)_
 
 The modular structure of the `Elm` app based on the article "[How I Structure Elm Apps](http://blog.jenkster.com/2016/04/how-i-structure-elm-apps.html)" by [Kris Jenkins](https://github.com/krisajenkins). It also uses the `elm-return` library by [Isaac Shapira](https://github.com/Fresheyeball) for using a [`Writer monad` approach](http://mutanatum.com/posts/2016-09-18-Return.html) with any `update` function.
 
@@ -28,7 +29,7 @@ stack build
 stack exec haskell-elm-todo
 ```
 
-- Run tests
+- Run tests:
 
 ``` shell
 stack test
@@ -66,13 +67,13 @@ http localhost:3000/todos
 cd {project}/client/
 ```
 
-- Build project:
+- Build:
 
 ``` shell
 npm i
 ```
 
-- Run app
+- Run:
 
 ``` shell
 npm start
@@ -82,7 +83,7 @@ npm start
 Open [http://localhost:3333](http://localhost:3333).
 
 
-## Acknowledge
+## Acknowledge (2016)
 
 ### Helpful Haskell / Servant stuff
 
